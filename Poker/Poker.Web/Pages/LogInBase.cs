@@ -32,7 +32,7 @@ namespace Poker.Web.Pages
             if (result.Successful)
             {
 
-                BlazoredModal.Cancel();
+                BlazoredModal.Close(ModalResult.Ok(true));
             }
             else
             {

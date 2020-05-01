@@ -17,6 +17,8 @@ namespace Poker.Web.Shared
 
         [Inject] public IModalService ModalService { get; set; }
 
+        public bool ChangeIsMade { get; set; }
+
         protected async Task ShowSignIn()
         {
             var resultModal = ModalService.Show<SignIn>("Sign In");
@@ -24,11 +26,16 @@ namespace Poker.Web.Shared
             base.StateHasChanged();
         }
 
-        protected async Task ShowLogin()
+        protected async void ShowLogin()
         {
+
             var resultModal = ModalService.Show<LogIn>("Log in");
             var result = await resultModal.Result;
-            StateHasChanged();
+            if (!result.Cancelled)
+            {
+                ChangeIsMade = (bool) result.Data;
+                StateHasChanged();
+            }
         }
         protected void ToggleNavMenu()
         {

@@ -1,9 +1,8 @@
-﻿@using Blazored.LocalStorage
-@using Poker.Web.Pages
-@using Poker.Web.Service
+﻿@using Poker.Web.Service
 @inherits NavMenuBase
 @inject IModalService Modal
 @inject IAccountService AccountService
+
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Poker.Web</a>
@@ -20,6 +19,7 @@
             </NavLink>
         </li>
     </ul>
+    <b class="text-white">@ChangeIsMade</b>
     <AuthorizeView>
         <Authorized>
             <div class="nav-item px-3 fixed-bottom">
