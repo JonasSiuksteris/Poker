@@ -1,0 +1,44 @@
+﻿@inherits LogInBase
+@inject IModalService ModalService
+
+<EditForm Model="@User" OnValidSubmit="@LogIn">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    @if (!ErrorMessage.IsNullOrEmpty())
+    {
+        <div class= "text-danger text-center">
+            @ErrorMessage
+        </div>
+    }
+    <hr />
+    <div class="form-group row">
+        <label for="email" class="col-sm-3 col-form-label">
+            Email
+        </label>
+        <div class="col-sm-9">
+            <InputText id="email" class="form-control" placeholder="Email"
+                       @bind-Value="User.Email" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="password" class="col-sm-3 col-form-label">
+            Password
+        </label>
+        <div class="col-sm-9">
+            <InputText type="password" id="password" class="form-control" placeholder="Password"
+                       @bind-Value="User.Password" />
+        </div>
+    </div>
+    <div class="form-group col-sm-7">
+        <InputCheckbox type="rememberMe" id="rememberMe" class="form-check-input"
+                       @bind-Value="User.RememberMe"/>
+        <label for="rememberMe" class="form-check-label">
+            Remember Me
+        </label>
+
+    </div>
+    <div class="text-center">
+        <input type="submit" class="btn btn-primary" Value="Confirm" />
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-danger">Cancel</button>
+    </div>
+</EditForm>
