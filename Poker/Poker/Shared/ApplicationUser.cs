@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+
+namespace Poker.Shared
+{
+    public class ApplicationUser : IdentityUser
+    {
+
+    }
+}
