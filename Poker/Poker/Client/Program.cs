@@ -30,6 +30,7 @@ namespace Poker.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITableService, TableService>();
 
             await builder.Build().RunAsync();
         }

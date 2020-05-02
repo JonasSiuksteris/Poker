@@ -37,6 +37,8 @@ namespace Poker.Server.Controllers
 
             }
 
+            await _userManager.AddToRoleAsync(newUser, "User");
+
             return Ok(new RegisterResult { Successful = true });
         }
     }

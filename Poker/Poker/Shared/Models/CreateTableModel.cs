@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Poker.Shared
+namespace Poker.Shared.Models
 {
-    public class PokerTable
+    public class CreateTableModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int MaxPlayers { get; set; }
     }

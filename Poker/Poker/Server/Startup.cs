@@ -11,7 +11,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq;
 using System.Text;
+using AutoMapper;
 using Microsoft.Net.Http.Headers;
+using Poker.Server.Repositories;
 using Poker.Shared;
 
 namespace Poker.Server
@@ -29,6 +31,8 @@ namespace Poker.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
@@ -57,6 +61,7 @@ namespace Poker.Server
                     };
                 });
 
+            services.AddScoped<ITableRepository, TableRepository>();
 
             services.AddControllersWithViews();
         }

@@ -1,0 +1,39 @@
+﻿@inherits NewTableBase
+@inject IModalService ModalService
+
+<EditForm Model="@PokerTable" OnValidSubmit="@CreateTable">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    @if (ShowErrors)
+    {
+        <div class="alert alert-danger" role="alert">
+            @foreach (var error in Errors)
+            {
+                <p>@error</p>
+            }
+        </div>
+    }
+    <hr />
+    <div class="form-group row">
+        <label for="tableName" class="col-sm-3 col-form-label">
+            Table Name
+        </label>
+        <div class="col-sm-9">
+            <InputText id="tableName" class="form-control" placeholder="New Table"
+                       @bind-Value="PokerTable.Name" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="maxPlayers" class="col-sm-3 col-form-label">
+            Maximum Player Count
+        </label>
+        <div class="col-sm-9">
+            <InputNumber type="maxPlayers" id="maxPlayers" class="form-control" placeholder="Player Count"
+                         @bind-Value="PokerTable.MaxPlayers" />
+        </div>
+    </div>
+    <div class="text-center">
+        <input type="submit" class="btn btn-primary" Value="Confirm" />
+        <button @onclick="BlazoredModal.Cancel" class="btn btn-danger">Cancel</button>
+    </div>
+</EditForm>
