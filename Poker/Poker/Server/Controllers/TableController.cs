@@ -67,5 +67,26 @@ namespace Poker.Server.Controllers
                 };
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<GetTablesResult>> GetTables()
+        {
+            try
+            {
+                return (new GetTablesResult
+                {
+                    Successful = true,
+                    PokerTables = await _tableRepository.GetTables()
+                });
+            }
+            catch (Exception)
+            {
+                return (new GetTablesResult
+                {
+                    Successful = false,
+                    Error = "Error processing request"
+                });
+            }
+        }
     }
 }

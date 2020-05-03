@@ -1,0 +1,16 @@
+﻿@inherits TableListBase
+
+
+@if (PokerTables == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <div class="card-deck">
+        @foreach (var table in PokerTables)
+        {
+            <DisplayTable Table="table"></DisplayTable>
+        }
+    </div> 
+}

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Poker.Shared;
 using Poker.Shared.Models;
 
 namespace Poker.Client.Services
@@ -20,6 +21,12 @@ namespace Poker.Client.Services
         public async Task<CreateTableResult> Create(CreateTableModel model)
         {
             var result = await _httpClient.PostJsonAsync<CreateTableResult>("api/table", model);
+            return result;
+        }
+
+        public async Task<GetTablesResult> GetList()
+        {
+            var result = await _httpClient.GetJsonAsync<GetTablesResult>("api/table");
             return result;
         }
     }
