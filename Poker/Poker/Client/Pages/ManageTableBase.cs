@@ -13,6 +13,8 @@ namespace Poker.Client.Pages
     {
         [Inject] public IModalService ModalService { get; set; }
 
+        protected TableList ChildComponent;
+
         protected async Task ShowNewTable()
         {
             var resultModal = ModalService.Show<NewTable>("Create New Table");
@@ -20,8 +22,9 @@ namespace Poker.Client.Pages
 
             if (!result.Cancelled)
             {
-                StateHasChanged();
+                ChildComponent.Refresh();
             }
+
         }
     }
 

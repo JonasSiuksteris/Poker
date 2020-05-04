@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared;
+using Poker.Shared.Models;
 
 namespace Poker.Client.Pages
 {
@@ -13,12 +14,30 @@ namespace Poker.Client.Pages
         [Inject]
         public ITableService TableService { get; set; }
 
+
         public IEnumerable<PokerTable> PokerTables { get; set; }
 
         public bool ShowError { get; set; }
         public string ErrorMessage { get; set; }
 
         protected override async Task OnInitializedAsync()
+        {
+            await GetTablesList();
+        }
+
+        protected async void EditHandler(string message)
+        {
+            await GetTablesList();
+            StateHasChanged();
+        }
+
+        public async void Refresh()
+        {
+            await GetTablesList();
+            StateHasChanged();
+        }
+
+        private async Task GetTablesList()
         {
             ShowError = false;
 

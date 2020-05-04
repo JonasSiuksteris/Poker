@@ -29,5 +29,11 @@ namespace Poker.Client.Services
             var result = await _httpClient.GetJsonAsync<GetTablesResult>("api/table");
             return result;
         }
+
+        public async Task<DeleteTableResult> Delete(int id)
+        {
+            var result = await _httpClient.PostJsonAsync<DeleteTableResult>("api/table/delete", id);
+            return result;
+        }
     }
 }

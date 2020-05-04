@@ -1,6 +1,9 @@
 ﻿@inherits ManageTableBase
 @page "/ManageTable"
+@attribute [Authorize(Roles = "Admin")]
 
 <button @onclick="@ShowNewTable" class="btn btn-primary">Create New Table </button>
 
-<TableList/>
+<hr/>
+
+<TableList @ref="ChildComponent"/>

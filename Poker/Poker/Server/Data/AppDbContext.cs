@@ -34,11 +34,6 @@ namespace Poker.Server.Data
                 .HasOne(pt => pt.Table)
                 .WithMany()
                 .HasForeignKey(pt => pt.TableId);
-
-            builder.Entity<PlayerTable>()
-                .HasOne(pt => pt.User)
-                .WithMany()
-                .HasForeignKey(pt => pt.UserId);
         }
 
 

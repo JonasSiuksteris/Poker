@@ -13,5 +13,7 @@ namespace Poker.Client.Services
 
         Task<GetTablesResult> GetList();
 
+        Task<DeleteTableResult> Delete(int id);
+
     }
 }

@@ -13,7 +13,6 @@ namespace Poker.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
     public class TableController : ControllerBase
     {
         private readonly ITableRepository _tableRepository;
@@ -26,6 +25,7 @@ namespace Poker.Server.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CreateTableResult>> Create([FromBody] CreateTableModel model)
         {
@@ -88,5 +88,29 @@ namespace Poker.Server.Controllers
                 });
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("delete")]
+        public async Task<ActionResult<DeleteTableResult>> DeleteTable([FromBody]int tableId)
+        {
+            try
+            {
+                await _tableRepository.DeleteTable(tableId);
+                return (new DeleteTableResult
+                {
+                    Successful = true
+                });
+
+            }
+            catch (Exception)
+            {
+                return (new DeleteTableResult
+                {
+                    Successful = false,
+                    Error = "Error processing request"
+                });
+            }
+        }
+
     }
 }
