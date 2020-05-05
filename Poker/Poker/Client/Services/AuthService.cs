@@ -45,6 +45,7 @@ namespace Poker.Client.Services
             }
 
             await _localStorage.SetItemAsync("authToken", loginResult.Token);
+            await _localStorage.SetItemAsync("currentTable", 0);
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
 
@@ -54,6 +55,7 @@ namespace Poker.Client.Services
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("currentTable");
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }

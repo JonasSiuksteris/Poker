@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Poker.Server.Data;
 
-namespace Poker.Server.Data.Migrations
+namespace Poker.Server.data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200504110528_ApplicationUserChange")]
+    partial class ApplicationUserChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace Poker.Server.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5e0bb619-4948-492a-863d-d42ac19f20b1",
-                            ConcurrencyStamp = "a39a63eb-416c-4f95-a9c5-9a0d6fc709e4",
+                            Id = "0d6c4295-6b33-43fe-ac80-5966f400f064",
+                            ConcurrencyStamp = "a9a8f045-9007-411a-ad5f-dcc7edf027fd",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "e364982b-6a56-4d8f-b05d-9d08ef1bac50",
-                            ConcurrencyStamp = "3565920f-a6b8-45ad-bc7a-72b237a8370a",
+                            Id = "48b6a847-42be-4c98-bf19-193b09e1ba16",
+                            ConcurrencyStamp = "239c7ce4-20c8-4bda-bd05-8113ae6a0611",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

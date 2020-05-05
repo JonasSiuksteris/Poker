@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Poker.Server.Data;
 using Poker.Shared;
@@ -13,7 +15,7 @@ namespace Poker.Server.Repositories
         private readonly AppDbContext _appDbContext;
 
         public TableRepository(AppDbContext appDbContext)
-        { 
+        {
             _appDbContext = appDbContext;
         }
         public async Task<IEnumerable<PokerTable>> GetTables()
@@ -59,6 +61,27 @@ namespace Poker.Server.Repositories
             _appDbContext.PokerTables.Remove(result);
             await _appDbContext.SaveChangesAsync();
             return result;
+        }
+
+        public async Task AddUserToTable(int tableId, string userId)
+        {
+            var newPlayer = new PlayerTable
+            {
+                TableId = tableId,
+                UserId = userId
+            };
+            await _appDbContext.PlayerTables.AddAsync(newPlayer);
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task RemoveUserFromTable(int tableId, string userId)
+        {
+
+            var result = await _appDbContext.PlayerTables.FirstOrDefaultAsync(e => e.UserId == userId && e.TableId == tableId);
+            if (result == null) return;
+
+            _appDbContext.PlayerTables.Remove(result);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

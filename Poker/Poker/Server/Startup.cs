@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using Microsoft.Net.Http.Headers;
+using Poker.Server.Hubs;
 using Poker.Server.Repositories;
 using Poker.Shared;
 
@@ -61,7 +62,10 @@ namespace Poker.Server
                     };
                 });
 
+            services.AddSignalR();
+
             services.AddScoped<ITableRepository, TableRepository>();
+            services.AddScoped<IGameSessionRepository, GameSessionRepository>();
 
             services.AddControllersWithViews();
         }
@@ -95,6 +99,7 @@ namespace Poker.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<RefreshHub>("/chatHub");
                 endpoints.MapFallbackToFile("index.html");
             });
         }

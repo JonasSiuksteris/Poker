@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Poker.Client.Pages;
 using Poker.Client.Services;
 using Poker.Shared;
 
@@ -19,6 +21,8 @@ namespace Poker.Client.Shared
 
         [Inject] public ITableService TableService { get; set; }
 
+        [Inject] public ILocalStorageService LocalStorageService { get; set; }
+
         [Inject] public NavigationManager NavigationManager { get; set; }
 
         protected async Task Delete()
@@ -31,6 +35,15 @@ namespace Poker.Client.Shared
             }
 
 
+        }
+
+        protected async Task JoinTable()
+        {
+            var result = await TableService.AddPlayer(Table.Id);
+
+            await LocalStorageService.SetItemAsync("currentTable", Table.Id);
+
+            NavigationManager.NavigateTo("/Game");
         }
     }
 }

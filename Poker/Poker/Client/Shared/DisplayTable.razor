@@ -8,15 +8,16 @@
     </div>
 
     <img class="card-img-top imageThumbnail" src="img/tableimg.png"/>
-
-    <AuthorizeView Roles="Admin">
-        <div class="card-footer text-center">
+    <div class="card-footer text-center">
+        <AuthorizeView Roles="Admin">
             <a href="#" class="btn btn-primary m-1">View</a>
 
             <a href="#" class="btn btn-primary m-1">Edit</a>
 
             <button @onclick="@Delete" class="btn btn-danger m-1">Delete</button>
-        </div>
-    </AuthorizeView>
-
+        </AuthorizeView>
+        <AuthorizeView Roles="User">
+            <button @onclick="@JoinTable" class="btn btn-danger m-1">Join Room</button>
+        </AuthorizeView>
+    </div>
 </div>

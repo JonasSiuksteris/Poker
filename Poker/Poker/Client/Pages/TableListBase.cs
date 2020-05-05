@@ -14,6 +14,8 @@ namespace Poker.Client.Pages
         [Inject]
         public ITableService TableService { get; set; }
 
+        [Parameter]
+        public EventCallback<string> OnChange { get; set; }
 
         public IEnumerable<PokerTable> PokerTables { get; set; }
 
@@ -25,9 +27,10 @@ namespace Poker.Client.Pages
             await GetTablesList();
         }
 
-        protected async void EditHandler(string message)
+        protected async void UpdateHandler(string message)
         {
             await GetTablesList();
+            await OnChange.InvokeAsync("Table List changed");
             StateHasChanged();
         }
 

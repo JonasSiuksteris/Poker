@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Poker.Server.Repositories;
 using Poker.Shared;
@@ -17,12 +18,15 @@ namespace Poker.Server.Controllers
     {
         private readonly ITableRepository _tableRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public TableController(ITableRepository tableRepository,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<ApplicationUser> userManager)
         {
             _tableRepository = tableRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [Authorize(Roles = "Admin")]
@@ -110,6 +114,60 @@ namespace Poker.Server.Controllers
                     Error = "Error processing request"
                 });
             }
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost("join")]
+        public async Task<ActionResult<JoinTableResult>> JoinTable([FromBody] int tableId)
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                await _tableRepository.AddUserToTable(tableId, currentUser.Id);
+                currentUser.CurrentTableId = tableId;
+                await _userManager.UpdateAsync(currentUser);
+
+                return (new JoinTableResult
+                {
+                    Successful = true
+                });
+            }
+            catch (Exception)
+            {
+                return (new JoinTableResult
+                {
+                    Successful = false,
+                    Error = "Error processing request"
+                });
+            }
+
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost("leave")]
+        public async Task<ActionResult<JoinTableResult>> LeaveTable([FromBody] int tableId)
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+                await _tableRepository.RemoveUserFromTable(tableId, currentUser.Id);
+                currentUser.CurrentTableId = 0;
+                await _userManager.UpdateAsync(currentUser);
+
+                return (new JoinTableResult
+                {
+                    Successful = true
+                });
+            }
+            catch (Exception)
+            {
+                return (new JoinTableResult
+                {
+                    Successful = false,
+                    Error = "Error processing request"
+                });
+            }
+
         }
 
     }

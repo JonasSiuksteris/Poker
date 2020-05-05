@@ -7,6 +7,6 @@ namespace Poker.Shared
 {
     public class ApplicationUser : IdentityUser
     {
-
+        public int CurrentTableId { get; set; }
     }
 }

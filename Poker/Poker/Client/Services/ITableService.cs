@@ -15,5 +15,9 @@ namespace Poker.Client.Services
 
         Task<DeleteTableResult> Delete(int id);
 
+        Task<JoinTableResult> AddPlayer(int id);
+
+        Task<JoinTableResult> RemovePlayer(int id);
+
     }
 }

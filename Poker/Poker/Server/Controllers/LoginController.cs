@@ -59,7 +59,7 @@ namespace Poker.Server.Controllers
                 signingCredentials: creds
             );
 
-            return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token)});
         }
     }
 }

@@ -1,5 +1,14 @@
 ﻿@page "/"
+@inherits IndexBase
+@inject NavigationManager NavigationManager
 
 <AuthorizeView Roles="User">
-    <TableList/>
+    @if(@CurrentTable != 0)
+    {
+        NavigationManager.NavigateTo("/Game");
+    }
+    else
+    {
+        <TableList/>
+    }
 </AuthorizeView>

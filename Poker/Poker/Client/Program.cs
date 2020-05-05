@@ -7,8 +7,10 @@ using Blazored.LocalStorage;
 using Blazored.Modal;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Poker.Client.Services;
+using Poker.Shared;
 
 
 namespace Poker.Client
@@ -31,6 +33,7 @@ namespace Poker.Client
             builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITableService, TableService>();
+            builder.Services.AddScoped<IGameSessionService, GameSessionService>();
 
             await builder.Build().RunAsync();
         }

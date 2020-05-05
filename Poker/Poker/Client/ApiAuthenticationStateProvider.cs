@@ -21,6 +21,8 @@ namespace Poker.Client
             _httpClient = httpClient;
             _localStorage = localStorage;
         }
+
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var savedToken = await _localStorage.GetItemAsync<string>("authToken");

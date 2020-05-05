@@ -1,0 +1,73 @@
+﻿@inherits GameSessionBase
+@attribute [Authorize(Roles = "User")]
+@page "/Game"
+
+
+@if (GameInformation == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <div class="container ">
+        @GameInformation.Players.Count
+        <div class="row">
+            <div class="col-md-4">
+                @if (GameInformation.Players.Count >= 1)
+                {
+                    <p>@GameInformation.Players[0].Username</p>
+                }
+            </div>
+            <div class="col-md-4">
+                @if (GameInformation.Players.Count >= 2)
+                {
+                    <p>@GameInformation.Players[1].Username</p>
+                }
+            </div>
+            <div class="col-md-4">
+                Player3
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        Player 4
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Player 5
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                x
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        Player 6
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        Player 7
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <button @onclick="@LeaveTable" class="btn btn-danger m-1">Leave table</button>
+            </div>
+            <div class="col-md-4">
+                Main player
+            </div>
+            <div class="col-md-4">
+                Menu2
+            </div>
+        </div>
+    </div>
+}
+

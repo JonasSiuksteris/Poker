@@ -20,6 +20,8 @@ namespace Poker.Client.Shared
 
         [Inject] public IModalService ModalService { get; set; }
 
+        [Parameter] public EventCallback<string> OnChange { get; set; }
+
 
         protected async Task ShowSignIn()
         {
@@ -28,7 +30,7 @@ namespace Poker.Client.Shared
 
             if (!result.Cancelled)
             {
-                StateHasChanged();
+                await OnChange.InvokeAsync("SignIn");
             }
         }
 
@@ -39,7 +41,7 @@ namespace Poker.Client.Shared
 
             if (!result.Cancelled)
             {
-                StateHasChanged();
+                await OnChange.InvokeAsync("Login");
             }
         }
 
@@ -50,7 +52,7 @@ namespace Poker.Client.Shared
 
             if (!result.Cancelled)
             {
-                StateHasChanged();
+                await OnChange.InvokeAsync("Logout");
             }
         }
         protected void ToggleNavMenu()
