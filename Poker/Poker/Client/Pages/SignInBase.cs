@@ -24,7 +24,7 @@ namespace Poker.Client.Pages
         {
             ShowErrors = false;
             var result = await AccountService.Register(User);
-            if (result.Successful == true)
+            if (result.Successful)
             {
                 BlazoredModal.Close();
             }

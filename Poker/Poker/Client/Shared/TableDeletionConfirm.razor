@@ -1,0 +1,7 @@
+﻿@inherits TableDeletionConfirmBase
+<h4>Are you sure you want to delete @Table.Name table?</h4>
+<p></p>
+<div class="modal-footer">
+    <button class="btn btn-danger" @onclick="@DeleteConfirm">Confirm</button>
+    <button class="btn btn-secondary" @onclick="BlazoredModal.Cancel">Cancel</button>
+</div>

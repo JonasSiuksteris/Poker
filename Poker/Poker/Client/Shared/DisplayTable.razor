@@ -14,7 +14,7 @@
 
             <a href="#" class="btn btn-primary m-1">Edit</a>
 
-            <button @onclick="@Delete" class="btn btn-danger m-1">Delete</button>
+            <button @onclick="@DeleteConfirm" class="btn btn-danger m-1">Delete</button>
         </AuthorizeView>
         <AuthorizeView Roles="User">
             <button @onclick="@JoinTable" class="btn btn-danger m-1">Join Room</button>

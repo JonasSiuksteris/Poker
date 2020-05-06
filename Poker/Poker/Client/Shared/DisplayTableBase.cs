@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Poker.Client.Pages;
@@ -25,16 +27,20 @@ namespace Poker.Client.Shared
 
         [Inject] public NavigationManager NavigationManager { get; set; }
 
-        protected async Task Delete()
-        {
-            var result = await TableService.Delete(Table.Id);
+        [Inject] public IModalService ModalService { get; set; }
 
-            if (result.Successful)
+        protected async Task DeleteConfirm()
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(Table), Table);
+
+            var resultModal = ModalService.Show<TableDeletionConfirm>("Confirm", parameters);
+            var result = await resultModal.Result;
+
+            if (!result.Cancelled)
             {
                 await OnChange.InvokeAsync("List was changed");
             }
-
-
         }
 
         protected async Task JoinTable()
