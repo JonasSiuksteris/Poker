@@ -26,6 +26,7 @@ namespace Poker.Client
 
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://localhost:44369/") });
 
+
             builder.Services.AddOptions();
             builder.Services.AddBlazoredModal();
             builder.Services.AddBlazoredLocalStorage();

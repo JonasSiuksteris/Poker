@@ -3,7 +3,7 @@
 <BlazoredModal />
 
 <div class="sidebar">
-    <NavMenu OnChange="@Test"/>
+    <NavMenu />
 </div>
 
 <div class="main">
@@ -11,12 +11,3 @@
         @Body
     </div>
 </div>
-
-@code
-{
-    void Test()
-    {
-        Console.WriteLine(1);
-        StateHasChanged();
-    }
-}

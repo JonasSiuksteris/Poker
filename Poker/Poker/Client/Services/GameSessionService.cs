@@ -20,9 +20,7 @@ namespace Poker.Client.Services
 
         public async Task<IEnumerable<string>> GetPlayers(int tableId)
         {
-            Console.WriteLine(3);
             var result = await _httpClient.PostJsonAsync<IEnumerable<string>>("api/GameSession", tableId);
-            Console.WriteLine(4);
             return result;
         }
     }

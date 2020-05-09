@@ -19,10 +19,11 @@ namespace Poker.Server.Controllers
         }
 
         [HttpPost]
-        public IEnumerable<string> GetTables([FromBody]int tableId)
+        public IEnumerable<string> GetPlayers([FromBody]int tableId)
         {
             try
             {
+                var test = HttpContext.User.Identity.Name;
                 return _gameSessionRepository.GetPlayers(tableId);
             }
             catch (Exception)

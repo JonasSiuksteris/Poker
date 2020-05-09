@@ -2,7 +2,6 @@
 @attribute [Authorize(Roles = "User")]
 @page "/Game"
 
-
 @if (GameInformation == null)
 {
     <div class="spinner"></div>
@@ -10,62 +9,127 @@
 else
 {
     <div class="container ">
-        @GameInformation.Players.Count
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 @if (GameInformation.Players.Count >= 1)
                 {
-                    <p>@GameInformation.Players[0].Username</p>
+                    <SessionPlayerInfo GameInformation = "@GameInformation" GamePlayer="@GameInformation.Players[0]"/>
+                }
+                else
+                {
+                    <p>Empty seat</p>
                 }
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 @if (GameInformation.Players.Count >= 2)
                 {
-                    <p>@GameInformation.Players[1].Username</p>
+                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players[1]" />
+                }
+                else
+                {
+                    <p>Empty seat</p>
                 }
             </div>
-            <div class="col-md-4">
-                Player3
+            <div class="col-md-3">
+                @if (GameInformation.Players.Count >= 3)
+                {
+                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players[2]" />
+                }
+                else
+                {
+                    <p>Empty seat</p>
+                }
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="row">
                     <div class="col-md-12">
-                        Player 4
+                        @if (GameInformation.Players.Count >= 4)
+                        {
+                            <p>@GameInformation.Players[3].Username</p>
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        Player 5
+                        @if (GameInformation.Players.Count >= 5)
+                        {
+                            <p>@GameInformation.Players[4].Username</p>
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                x
+            <div class="col-md-5">
+                @if (!string.IsNullOrEmpty(GameInformation.Winner))
+                {
+                    <p>@GameInformation.Winner</p>
+                }
+                @if (GameInformation.GameInProgress && GameInformation.TableCards.Count > 0)
+                {
+                    foreach (var card in GameInformation.TableCards)
+                    {
+                        <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error"/>
+                    }
+                }
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="row">
                     <div class="col-md-12">
-                        Player 6
+                        @if (GameInformation.Players.Count >= 6)
+                        {
+                            <p>@GameInformation.Players[5].Username</p>
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        Player 7
+                        @if (GameInformation.Players.Count >= 7)
+                        {
+                            <p>@GameInformation.Players[6].Username</p>
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <button @onclick="@LeaveTable" class="btn btn-danger m-1">Leave table</button>
+                <button @onclick="@MarkReady" class="btn btn-primary m-1">Join table</button>
             </div>
-            <div class="col-md-4">
-                Main player
+            <div class="col-md-5">
+                @if (GameInformation.Players.Count >= 8)
+                {
+                    <p>@GameInformation.Players[7].Username</p>
+                }
+                else
+                {
+                    <p>Empty seat</p>
+                }
             </div>
-            <div class="col-md-4">
-                Menu2
+            <div class="col-md-3">
+                @if (GameInformation.GameInProgress &&GameInformation.CurrentPlayer == AuthState.User.Identity.Name)
+                {
+                    <p>@GameInformation.CurrentPlayer</p>
+                    <button @onclick="@Check" class="btn btn-primary m-1">Check</button>
+                    <button @onclick="@Fold" class="btn btn-primary m-1">Fold</button>
+                }
             </div>
         </div>
     </div>

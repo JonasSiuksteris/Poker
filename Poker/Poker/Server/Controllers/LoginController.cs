@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Poker.Server.Hubs;
 using Poker.Shared;
 using Poker.Shared.Models;
 
@@ -27,7 +29,6 @@ namespace Poker.Server.Controllers
             _configuration = configuration;
             _signInManager = signInManager;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginModel login)

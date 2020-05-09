@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared;
 
-namespace Poker.Client.Shared
+namespace Poker.Client.Modals
 {
     public class TableDeletionConfirmBase : ComponentBase
     {

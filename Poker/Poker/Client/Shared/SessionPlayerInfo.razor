@@ -1,0 +1,22 @@
+﻿@inherits SessionPlayerInfoBase
+
+<p>@GamePlayer.Username</p>
+@if (!GamePlayer.IsPlaying)
+{
+    <p>@GamePlayer.IsReady</p>
+}
+
+@if (GameInformation.Hand.Count > 0)
+{
+    foreach (var card in GameInformation.Hand)
+    {
+        if (GamePlayer.Username == AuthState.User.Identity.Name)
+        {
+            <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error"/>
+        }
+        else
+        {
+            <img style="height: 100px; width: auto" src="img/Cards/gray_back.png" alt="Error"/>
+        }
+    }
+}

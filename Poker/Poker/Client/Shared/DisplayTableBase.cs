@@ -7,6 +7,7 @@ using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Poker.Client.Modals;
 using Poker.Client.Pages;
 using Poker.Client.Services;
 using Poker.Shared;
@@ -45,11 +46,12 @@ namespace Poker.Client.Shared
 
         protected async Task JoinTable()
         {
-            var result = await TableService.AddPlayer(Table.Id);
+            await TableService.AddPlayer(Table.Id);
 
             await LocalStorageService.SetItemAsync("currentTable", Table.Id);
 
             NavigationManager.NavigateTo("/Game");
+            
         }
     }
 }

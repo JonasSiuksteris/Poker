@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared.Models;
 
-namespace Poker.Client.Pages
+namespace Poker.Client.Modals
 {
     public class SignInBase : ComponentBase
     {

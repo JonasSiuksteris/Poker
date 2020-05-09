@@ -42,9 +42,9 @@ namespace Poker.Client.Services
             return result;
         }
 
-        public async Task<JoinTableResult> RemovePlayer(int id)
+        public async Task<JoinTableResult> RemovePlayer()
         {
-            var result = await _httpClient.PostJsonAsync<JoinTableResult>("api/table/leave", id);
+            var result = await _httpClient.PostJsonAsync<JoinTableResult>("api/table/leave", null);
             return result;
         }
     }

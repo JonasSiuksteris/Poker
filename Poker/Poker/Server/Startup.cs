@@ -99,7 +99,7 @@ namespace Poker.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<RefreshHub>("/chatHub");
+                endpoints.MapHub<GameHub>("/gameHub");
                 endpoints.MapFallbackToFile("index.html");
             });
         }

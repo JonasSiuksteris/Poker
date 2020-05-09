@@ -145,12 +145,12 @@ namespace Poker.Server.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPost("leave")]
-        public async Task<ActionResult<JoinTableResult>> LeaveTable([FromBody] int tableId)
+        public async Task<ActionResult<JoinTableResult>> LeaveTable()
         {
             try
             {
                 var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-                await _tableRepository.RemoveUserFromTable(tableId, currentUser.Id);
+                await _tableRepository.RemoveUserFromTable(currentUser.CurrentTableId, currentUser.Id);
                 currentUser.CurrentTableId = 0;
                 await _userManager.UpdateAsync(currentUser);
 

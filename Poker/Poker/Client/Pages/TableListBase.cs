@@ -27,7 +27,9 @@ namespace Poker.Client.Pages
             await GetTablesList();
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         protected async void UpdateHandler(string message)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             await GetTablesList();
             await OnChange.InvokeAsync("Table List changed");
