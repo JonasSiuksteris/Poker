@@ -3,12 +3,5 @@
 @inject NavigationManager NavigationManager
 
 <AuthorizeView Roles="User">
-    @if(@CurrentTable != 0)
-    {
-        NavigationManager.NavigateTo("/Game");
-    }
-    else
-    {
         <TableList/>
-    }
 </AuthorizeView>

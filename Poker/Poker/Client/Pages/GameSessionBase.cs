@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Poker.Client.Services;
 using Poker.Shared;
+using Poker.Shared.Models;
 
 namespace Poker.Client.Pages
 {
@@ -39,24 +40,28 @@ namespace Poker.Client.Pages
                 .WithUrl(NavigationManager.ToAbsoluteUri("/gameHub"))
                 .Build();
 
-            _hubConnection.On("ReceiveAddedUser", ((string playerName) =>
-            {
-                GameInformation.Players.Add(new GamePlayer{Username = playerName});
-                StateHasChanged();
-            }));
+            //_hubConnection.On("ReceiveAddedUser", ((string playerName, int seatNumber) =>
+            //{
+            //    GameInformation.Players.Add(new GamePlayer
+            //    {
+            //        Username = playerName,
+            //        SeatNumber = seatNumber
+            //    });
+            //    StateHasChanged();
+            //}));
 
-            _hubConnection.On("ReceiveRemovedUser", ((string playerName) =>
-                {
-                    GameInformation.Players.Remove(
-                        GameInformation.Players.FirstOrDefault(e => e.Username == playerName));
-                    StateHasChanged();
-                }));
+            //_hubConnection.On("ReceiveRemovedUser", ((string playerName) =>
+            //    {
+            //        GameInformation.Players.Remove(
+            //            GameInformation.Players.FirstOrDefault(e => e.Username == playerName));
+            //        StateHasChanged();
+            //    }));
 
-            _hubConnection.On("ReceiveReadyState", (string player, bool isReady) =>
-            {
-                GameInformation.Players.FirstOrDefault(e => e.Username == player).IsReady = isReady;
-                StateHasChanged();
-            });
+            //_hubConnection.On("ReceiveReadyState", (string player, bool isReady) =>
+            //{
+            //    GameInformation.Players.FirstOrDefault(e => e.Username == player).IsReady = isReady;
+            //    StateHasChanged();
+            //});
 
             _hubConnection.On("ReceiveStartingHand", (object hand) =>
             {
@@ -65,18 +70,18 @@ namespace Poker.Client.Pages
                 StateHasChanged();
             });
 
-            _hubConnection.On("ReceivePlayingPlayers", (object playersjson) =>
-            {
-                var players = JsonConvert.DeserializeObject<List<string>>(playersjson.ToString());
-                foreach (var player in GameInformation.Players)
-                {
-                    if (players.Contains(player.Username))
-                        player.IsPlaying = true;
-                }
+            //_hubConnection.On("ReceivePlayingPlayers", (object playersjson) =>
+            //{
+            //    var players = JsonConvert.DeserializeObject<List<string>>(playersjson.ToString());
+            //    foreach (var player in GameInformation.Players)
+            //    {
+            //        if (players.Contains(player.Username))
+            //            player.IsPlaying = true;
+            //    }
 
-                GameInformation.GameInProgress = true;
-                StateHasChanged();
-            });
+            //    GameInformation.GameInProgress = true;
+            //    StateHasChanged();
+            //});
 
             _hubConnection.On("ReceiveTurnPlayer", (string currentPlayer) =>
             {
@@ -98,41 +103,64 @@ namespace Poker.Client.Pages
                 StateHasChanged();
             });
 
+
             _hubConnection.On("ReceiveWinner", (string winner) =>
             {
                 GameInformation.Winner = winner;
                 StateHasChanged();
             });
 
-            _hubConnection.On("ReceiveNewGame", async () =>
+            //_hubConnection.On("ReceiveNewGame",  () =>
+            //{
+            //    GameInformation = new GameInformation();
+            //});
+
+            _hubConnection.On("ReceiveStateRefresh", (object playerState) =>
             {
-                GameInformation = new GameInformation();
-                await GetPlayersList();
+                var playerStateModel = JsonConvert.DeserializeObject<PlayerStateModel>(playerState.ToString());
+
+                GameInformation.Players = playerStateModel.Players;
+                GameInformation.TableCards = playerStateModel.CommunityCards ?? new List<Card>();
+                GameInformation.Hand = playerStateModel.HandCards ?? new List<Card>();
+                GameInformation.GameInProgress = playerStateModel.GameInProgress;
+                if (GameInformation.GameInProgress == false)
+                {
+                    foreach (var gameInformationPlayer in GameInformation.Players)
+                    {
+                        gameInformationPlayer.IsPlaying = false;
+                    }
+                }
+
+                GameInformation.Winner = null;
+
                 StateHasChanged();
+            });
+
+            _hubConnection.On("ReceiveKick", async () =>
+            {
+                await LocalStorageService.RemoveItemAsync("currentTable");
+                NavigationManager.NavigateTo("/");
             });
 
             await _hubConnection.StartAsync();
 
             await _hubConnection.SendAsync("AddToUsers", await LocalStorageService.GetItemAsync<int>("currentTable"));
 
-            await GetPlayersList();
-
             await base.OnInitializedAsync();
 
         }
 
 
-        private async Task GetPlayersList()
-        {
-            var result = await GameSessionService.GetPlayers(await LocalStorageService.GetItemAsync<int>("currentTable"));
-            var playerList = result.Select(name => new GamePlayer { Username = name }).ToList();
-            GameInformation.Players = playerList;
-            StateHasChanged();
-        }
+        //private async Task GetPlayersList()
+        //{
+        //    var result = await GameSessionService.GetPlayers(await LocalStorageService.GetItemAsync<int>("currentTable"));
+        //    var playerList = result.Select(name => new GamePlayer { Username = name }).ToList();
+        //    GameInformation.Players = playerList;
+        //    StateHasChanged();
+        //}
 
         protected async Task LeaveTable()
         {
-            await _hubConnection.SendAsync("RemoveFromUsers", await LocalStorageService.GetItemAsync<int>("currentTable"));
             await LocalStorageService.RemoveItemAsync("currentTable");
             await _hubConnection.StopAsync();
             NavigationManager.NavigateTo("/");
@@ -142,6 +170,12 @@ namespace Poker.Client.Pages
         protected async void MarkReady()
         {
             await _hubConnection.SendAsync("MarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"));
+
+        }
+
+        protected async void UnmarkReady()
+        {
+            await _hubConnection.SendAsync("UnmarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"));
 
         }
 

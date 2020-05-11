@@ -6,7 +6,7 @@
     <p>@GamePlayer.IsReady</p>
 }
 
-@if (GameInformation.Hand.Count > 0)
+@if (GameInformation.Hand.Count > 0 && GamePlayer.IsPlaying)
 {
     foreach (var card in GameInformation.Hand)
     {

@@ -12,10 +12,14 @@ namespace Poker.Shared
 
         public bool IsPlaying { get; set; }
 
+        public int SeatNumber { get; set; }
+
         public GamePlayer()
         {
             IsReady = false;
             IsPlaying = false;
         }
+
+
     }
 }

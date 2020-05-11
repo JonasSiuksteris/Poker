@@ -33,8 +33,8 @@ namespace Poker.Server.Models
             Deck = new Deck();
             SmallBlindIndex = smallBlindIndex;
             BigBlindIndex = smallBlindIndex + 1;
-            RoundEndIndex = BigBlindIndex + 2;
-            Index = RoundEndIndex + 2;
+            RoundEndIndex = smallBlindIndex + 2;
+            Index = smallBlindIndex + 2;
             CommunityCardsActions = CommunityCardsActions.PreFlop;
         }
         public int NormalizeIndex(int index)
