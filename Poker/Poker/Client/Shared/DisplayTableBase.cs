@@ -46,12 +46,9 @@ namespace Poker.Client.Shared
 
         protected async Task JoinTable()
         {
-            //await TableService.AddPlayer(Table.Id);
-
             await LocalStorageService.SetItemAsync("currentTable", Table.Id);
 
             NavigationManager.NavigateTo("/Game");
-            
         }
     }
 }

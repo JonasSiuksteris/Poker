@@ -1,5 +1,13 @@
 ﻿@inherits SessionPlayerInfoBase
 
+@if (GamePlayer.IsPlaying)
+{
+    <p>@GamePlayer.ActionState</p>
+}
+@if (GamePlayer.IsReady)
+{
+    <p>@GamePlayer.GameMoney</p>
+}
 <p>@GamePlayer.Username</p>
 @if (!GamePlayer.IsPlaying)
 {
@@ -12,11 +20,11 @@
     {
         if (GamePlayer.Username == AuthState.User.Identity.Name)
         {
-            <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error"/>
+            <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error" />
         }
         else
         {
-            <img style="height: 100px; width: auto" src="img/Cards/gray_back.png" alt="Error"/>
+            <img style="height: 100px; width: auto" src="img/Cards/gray_back.png" alt="Error" />
         }
     }
 }

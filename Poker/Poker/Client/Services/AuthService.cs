@@ -33,6 +33,12 @@ namespace Poker.Client.Services
             return result;
         }
 
+        public async Task<int> GetBalance()
+        {
+            var result = await _httpClient.GetJsonAsync<int>("api/currency");
+            return result;
+        }
+
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);

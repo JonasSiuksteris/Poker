@@ -12,7 +12,11 @@ namespace Poker.Shared
 
         public bool IsPlaying { get; set; }
 
+        public PlayerActionState ActionState { get; set; } = PlayerActionState.Playing;
+
         public int SeatNumber { get; set; }
+
+        public int GameMoney { get; set; }
 
         public GamePlayer()
         {

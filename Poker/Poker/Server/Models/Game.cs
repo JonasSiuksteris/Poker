@@ -23,6 +23,10 @@ namespace Poker.Server.Models
 
         public int BigBlindIndex { get; set; }
 
+        public int RaiseAmount { get; set; }
+
+        public List<Pot> Winnings { get; set; }
+
         public CommunityCardsActions CommunityCardsActions { get; set; }
 
         public Game(int tableId, int smallBlindIndex)
@@ -30,6 +34,7 @@ namespace Poker.Server.Models
             TableId = tableId;
             Players = new List<Player>();
             TableCards = new List<Card>();
+            Winnings = new List<Pot>();
             Deck = new Deck();
             SmallBlindIndex = smallBlindIndex;
             BigBlindIndex = smallBlindIndex + 1;
@@ -63,6 +68,11 @@ namespace Poker.Server.Models
         public string GetPlayerNameByIndex(int index)
         {
             return Players.ElementAt(index)?.Name;
+        }
+
+        public Player GetPlayerByIndex(int index)
+        {
+            return Players.ElementAt(index);
         }
     }
 }

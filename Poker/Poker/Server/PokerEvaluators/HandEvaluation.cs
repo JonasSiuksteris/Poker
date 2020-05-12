@@ -14,7 +14,7 @@ namespace Poker.Server.PokerEvaluators
             if (RoyalFlush(cards))
                 return HandStrength.RoyalFlush;
             if (StraightFlush(cards))
-                return HandStrength.Flush;
+                return HandStrength.StraightFlush;
             if (FourOfAKind(cards))
                 return HandStrength.FourOfAKind;
             if (FullHouse(cards))
@@ -27,7 +27,15 @@ namespace Poker.Server.PokerEvaluators
                 return HandStrength.ThreeOfAKind;
             if (TwoPair(cards))
                 return HandStrength.TwoPair;
+            if (OnePair(cards))
+                return HandStrength.OnePair;
             return HandStrength.HighCard;
+        }
+
+        private static bool OnePair(List<Card> cards)
+        {
+            return cards.GroupBy(c => c.CardNumber)
+                       .Count(c => c.Count() == 2) == 1;
         }
 
         private static bool TwoPair(List<Card> cards)

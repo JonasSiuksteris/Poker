@@ -14,6 +14,7 @@ namespace Poker.Shared
         Straight,
         ThreeOfAKind,
         TwoPair,
+        OnePair,
         HighCard
     }
 }

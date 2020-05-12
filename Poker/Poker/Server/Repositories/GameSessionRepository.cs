@@ -15,10 +15,9 @@ namespace Poker.Server.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public IEnumerable<string> GetPlayers(int id)
-        {
-            return _appDbContext.PlayerTables.Where(e => e.TableId == id).Select(e => e.User.Email).AsEnumerable();
-
-        }
+        //public IEnumerable<string> GetPlayers(int id)
+        //{
+        //    return _appDbContext.PlayerTables.Where(e => e.TableId == id).Select(e => e.User.Email).AsEnumerable();
+        //}
     }
 }

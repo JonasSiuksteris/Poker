@@ -1,7 +1,4 @@
 ﻿@inherits NavMenuBase
-@inject IModalService Modal
-@inject IAuthService AccountService
-
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Poker.Web</a>
@@ -24,6 +21,9 @@
         <Authorized>
             <div class="nav-item px-3 fixed-bottom">
                 <b class="text-white">Hello, @context.User.Identity.Name!</b>
+                <br/>
+                <b class="text-white">You have: @Balance</b>
+
                 <hr />
                 <button @onclick="@LogOut" class="btn btn-primary">LogOut</button>
             </div>

@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
 using Poker.Client.Modals;
 using Poker.Client.Pages;
+using Poker.Client.Services;
 
 namespace Poker.Client.Shared
 {
@@ -15,7 +17,26 @@ namespace Poker.Client.Shared
 
         [Inject] public IModalService ModalService { get; set; }
 
+        [Inject] public IAuthService AccountService { get; set; }
+
+        [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+        public AuthenticationState AuthState { get; set; }
+
         [Parameter] public EventCallback<string> OnChange { get; set; }
+
+        public int Balance { get; set; }
+
+        protected  override async Task OnInitializedAsync()
+        {
+            AuthState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            Balance = -1;
+            if (AuthState.User.Identity.IsAuthenticated)
+            {
+                Balance = await AccountService.GetBalance();
+            }
+            await base.OnInitializedAsync();
+        }
 
 
         protected async Task ShowSignIn()
@@ -36,6 +57,7 @@ namespace Poker.Client.Shared
 
             if (!result.Cancelled)
             {
+                Balance = await AccountService.GetBalance();
                 await OnChange.InvokeAsync("Login");
             }
         }

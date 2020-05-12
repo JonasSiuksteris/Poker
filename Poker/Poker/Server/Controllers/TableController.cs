@@ -116,59 +116,59 @@ namespace Poker.Server.Controllers
             }
         }
 
-        [Authorize(Roles = "User")]
-        [HttpPost("join")]
-        public async Task<ActionResult<JoinTableResult>> JoinTable([FromBody] int tableId)
-        {
-            try
-            {
-                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-                await _tableRepository.AddUserToTable(tableId, currentUser.Id);
-                currentUser.CurrentTableId = tableId;
-                await _userManager.UpdateAsync(currentUser);
+        //[Authorize(Roles = "User")]
+        //[HttpPost("join")]
+        //public async Task<ActionResult<JoinTableResult>> JoinTable([FromBody] int tableId)
+        //{
+        //    try
+        //    {
+        //        var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+        //        await _tableRepository.AddUserToTable(tableId, currentUser.Id);
+        //        currentUser.CurrentTableId = tableId;
+        //        await _userManager.UpdateAsync(currentUser);
 
-                return (new JoinTableResult
-                {
-                    Successful = true
-                });
-            }
-            catch (Exception)
-            {
-                return (new JoinTableResult
-                {
-                    Successful = false,
-                    Error = "Error processing request"
-                });
-            }
+        //        return (new JoinTableResult
+        //        {
+        //            Successful = true
+        //        });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return (new JoinTableResult
+        //        {
+        //            Successful = false,
+        //            Error = "Error processing request"
+        //        });
+        //    }
 
-        }
+        //}
 
-        [Authorize(Roles = "User")]
-        [HttpPost("leave")]
-        public async Task<ActionResult<JoinTableResult>> LeaveTable()
-        {
-            try
-            {
-                var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-                await _tableRepository.RemoveUserFromTable(currentUser.CurrentTableId, currentUser.Id);
-                currentUser.CurrentTableId = 0;
-                await _userManager.UpdateAsync(currentUser);
+        //[Authorize(Roles = "User")]
+        //[HttpPost("leave")]
+        //public async Task<ActionResult<JoinTableResult>> LeaveTable()
+        //{
+        //    try
+        //    {
+        //        var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+        //        await _tableRepository.RemoveUserFromTable(currentUser.CurrentTableId, currentUser.Id);
+        //        currentUser.CurrentTableId = 0;
+        //        await _userManager.UpdateAsync(currentUser);
 
-                return (new JoinTableResult
-                {
-                    Successful = true
-                });
-            }
-            catch (Exception)
-            {
-                return (new JoinTableResult
-                {
-                    Successful = false,
-                    Error = "Error processing request"
-                });
-            }
+        //        return (new JoinTableResult
+        //        {
+        //            Successful = true
+        //        });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return (new JoinTableResult
+        //        {
+        //            Successful = false,
+        //            Error = "Error processing request"
+        //        });
+        //    }
 
-        }
+        //}
 
     }
 }

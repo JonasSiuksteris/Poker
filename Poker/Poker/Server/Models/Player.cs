@@ -10,7 +10,7 @@ namespace Poker.Server.Models
     {
         public string Name { get; set; }
         public List<Card> HandCards { get; set; } = new List<Card>();
-        public HandStrength HandStrength { get; set; }
-        public bool Left { get; set; } = false;
+        public HandStrength HandStrength { get; set; } = HandStrength.HighCard;
+        public PlayerActionState ActionState { get; set; } = PlayerActionState.Playing;
     }
 }

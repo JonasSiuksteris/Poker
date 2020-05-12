@@ -18,18 +18,18 @@ namespace Poker.Server.Controllers
             _gameSessionRepository = gameSessionRepository;
         }
 
-        [HttpPost]
-        public IEnumerable<string> GetPlayers([FromBody]int tableId)
-        {
-            try
-            {
-                var test = HttpContext.User.Identity.Name;
-                return _gameSessionRepository.GetPlayers(tableId);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        //[HttpPost]
+        //public IEnumerable<string> GetPlayers([FromBody]int tableId)
+        //{
+        //    try
+        //    {
+        //        var test = HttpContext.User.Identity.Name;
+        //        return _gameSessionRepository.GetPlayers(tableId);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return null;
+        //    }
+        //}
     }
 }

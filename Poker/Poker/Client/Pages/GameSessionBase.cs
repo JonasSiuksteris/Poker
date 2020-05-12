@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
+using Poker.Client.Modals;
 using Poker.Client.Services;
 using Poker.Shared;
 using Poker.Shared.Models;
@@ -16,6 +19,7 @@ namespace Poker.Client.Pages
 {
     public class GameSessionBase : ComponentBase
     {
+        [Inject] public IModalService ModalService { get; set; }
         [Inject] public ILocalStorageService LocalStorageService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
 
@@ -123,6 +127,7 @@ namespace Poker.Client.Pages
                 GameInformation.TableCards = playerStateModel.CommunityCards ?? new List<Card>();
                 GameInformation.Hand = playerStateModel.HandCards ?? new List<Card>();
                 GameInformation.GameInProgress = playerStateModel.GameInProgress;
+                GameInformation.RaiseAmount = playerStateModel.RaiseAmount;
                 if (GameInformation.GameInProgress == false)
                 {
                     foreach (var gameInformationPlayer in GameInformation.Players)
@@ -169,7 +174,10 @@ namespace Poker.Client.Pages
 
         protected async void MarkReady()
         {
-            await _hubConnection.SendAsync("MarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"));
+            var formModal = ModalService.Show<JoinTable>("Join table");
+            var result = await formModal.Result;
+            if (result.Cancelled) return;
+            await _hubConnection.SendAsync("MarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"), result.Data);
 
         }
 
@@ -189,5 +197,14 @@ namespace Poker.Client.Pages
             await _hubConnection.SendAsync("ActionFold", await LocalStorageService.GetItemAsync<int>("currentTable"));
         }
 
+        protected async Task Raise()
+        {
+            await _hubConnection.SendAsync("ActionRaise", await LocalStorageService.GetItemAsync<int>("currentTable"),1);
+        }
+
+        protected async Task Call()
+        {
+            await _hubConnection.SendAsync("ActionCall", await LocalStorageService.GetItemAsync<int>("currentTable"));
+        }
     }
 }

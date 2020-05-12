@@ -10,11 +10,13 @@ namespace Poker.Shared.Models
         public List<Card> CommunityCards { get; set; }
         public List<Card> HandCards { get; set; }
         public bool GameInProgress { get; set; }
+        public int RaiseAmount { get; set; }
         public PlayerStateModel()
         {
             Players = new List<GamePlayer>();
             CommunityCards = new List<Card>();
             HandCards = new List<Card>();
+            RaiseAmount = 0;
         }
     }
 }

@@ -132,12 +132,25 @@ else
                 }
             </div>
             <div class="col-md-3">
-                @if (GameInformation.GameInProgress &&GameInformation.CurrentPlayer == AuthState.User.Identity.Name)
-                {
-                    <p>@GameInformation.CurrentPlayer</p>
-                    <button @onclick="@Check" class="btn btn-primary m-1">Check</button>
-                    <button @onclick="@Fold" class="btn btn-primary m-1">Fold</button>
-                }
+                <div class="row">
+                </div>
+                <div class="row">
+                    @if (GameInformation.GameInProgress &&GameInformation.CurrentPlayer == AuthState.User.Identity.Name)
+                    {
+                        <p>@GameInformation.CurrentPlayer</p>
+                        if (GameInformation.RaiseAmount > 0)
+                        {
+                            <button @onclick="@Call" class="btn btn-primary m-1">Call</button>
+                        }
+                        else
+                        {
+                            <button @onclick="@Check" class="btn btn-primary m-1">Check</button>
+
+                        }
+                        <button @onclick="@Fold" class="btn btn-primary m-1">Fold</button>
+                        <button @onclick="@Raise" class="btn btn-primary m-1">Raise</button>
+                    }
+                </div>
             </div>
         </div>
     </div>

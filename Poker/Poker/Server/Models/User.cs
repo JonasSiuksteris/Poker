@@ -13,6 +13,7 @@ namespace Poker.Server.Models
         public bool IsReady { get; set; } = false;
         public bool InGame { get; set; }
         public int SeatNumber { get; set; }
+        public int Balance { get; set; }
 
     }
 }
