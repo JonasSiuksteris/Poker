@@ -41,6 +41,7 @@ namespace Poker.Server.Models
             RoundEndIndex = smallBlindIndex + 2;
             Index = smallBlindIndex + 2;
             CommunityCardsActions = CommunityCardsActions.PreFlop;
+            RaiseAmount = 0;
         }
         public int NormalizeIndex(int index)
         {

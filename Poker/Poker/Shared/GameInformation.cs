@@ -15,12 +15,14 @@ namespace Poker.Shared
         public int BigBlindIndex { get; set; }
         public string Winner { get; set; }
         public int RaiseAmount { get; set; }
+        public int PlayerRaise { get; set; }
         public GameInformation()
         {
             TableCards = new List<Card>();
             Hand = new List<Card>();
             GameInProgress = false;
             RaiseAmount = 0;
+            PlayerRaise = 0;
         }
 
     }

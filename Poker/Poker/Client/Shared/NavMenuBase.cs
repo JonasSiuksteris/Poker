@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -14,6 +15,7 @@ namespace Poker.Client.Shared
         public bool CollapseNavMenu { get; set; } = true;
 
         protected string NavMenuCssClass => CollapseNavMenu ? "collapse" : null;
+        [Inject] public IStateService StateService { get; set; }
 
         [Inject] public IModalService ModalService { get; set; }
 
@@ -35,9 +37,19 @@ namespace Poker.Client.Shared
             {
                 Balance = await AccountService.GetBalance();
             }
-            await base.OnInitializedAsync();
+
+            StateService.RefreshRequested += RefreshRequest;
         }
 
+        private async void RefreshRequest()
+        {
+            if (AuthState.User.Identity.IsAuthenticated)
+            {
+                Balance = await AccountService.GetBalance();
+            }
+
+            StateHasChanged();
+        }
 
         protected async Task ShowSignIn()
         {

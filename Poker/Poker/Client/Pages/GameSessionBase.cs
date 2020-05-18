@@ -9,6 +9,7 @@ using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Poker.Client.Modals;
 using Poker.Client.Services;
@@ -19,6 +20,7 @@ namespace Poker.Client.Pages
 {
     public class GameSessionBase : ComponentBase
     {
+        [Inject] public IStateService StateService { get; set; }
         [Inject] public IModalService ModalService { get; set; }
         [Inject] public ILocalStorageService LocalStorageService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
@@ -44,48 +46,12 @@ namespace Poker.Client.Pages
                 .WithUrl(NavigationManager.ToAbsoluteUri("/gameHub"))
                 .Build();
 
-            //_hubConnection.On("ReceiveAddedUser", ((string playerName, int seatNumber) =>
-            //{
-            //    GameInformation.Players.Add(new GamePlayer
-            //    {
-            //        Username = playerName,
-            //        SeatNumber = seatNumber
-            //    });
-            //    StateHasChanged();
-            //}));
-
-            //_hubConnection.On("ReceiveRemovedUser", ((string playerName) =>
-            //    {
-            //        GameInformation.Players.Remove(
-            //            GameInformation.Players.FirstOrDefault(e => e.Username == playerName));
-            //        StateHasChanged();
-            //    }));
-
-            //_hubConnection.On("ReceiveReadyState", (string player, bool isReady) =>
-            //{
-            //    GameInformation.Players.FirstOrDefault(e => e.Username == player).IsReady = isReady;
-            //    StateHasChanged();
-            //});
-
             _hubConnection.On("ReceiveStartingHand", (object hand) =>
             {
                 var newHand = JsonConvert.DeserializeObject<List<Card>>(hand.ToString());
                 GameInformation.Hand.AddRange(newHand);
                 StateHasChanged();
             });
-
-            //_hubConnection.On("ReceivePlayingPlayers", (object playersjson) =>
-            //{
-            //    var players = JsonConvert.DeserializeObject<List<string>>(playersjson.ToString());
-            //    foreach (var player in GameInformation.Players)
-            //    {
-            //        if (players.Contains(player.Username))
-            //            player.IsPlaying = true;
-            //    }
-
-            //    GameInformation.GameInProgress = true;
-            //    StateHasChanged();
-            //});
 
             _hubConnection.On("ReceiveTurnPlayer", (string currentPlayer) =>
             {
@@ -114,10 +80,6 @@ namespace Poker.Client.Pages
                 StateHasChanged();
             });
 
-            //_hubConnection.On("ReceiveNewGame",  () =>
-            //{
-            //    GameInformation = new GameInformation();
-            //});
 
             _hubConnection.On("ReceiveStateRefresh", (object playerState) =>
             {
@@ -155,15 +117,6 @@ namespace Poker.Client.Pages
 
         }
 
-
-        //private async Task GetPlayersList()
-        //{
-        //    var result = await GameSessionService.GetPlayers(await LocalStorageService.GetItemAsync<int>("currentTable"));
-        //    var playerList = result.Select(name => new GamePlayer { Username = name }).ToList();
-        //    GameInformation.Players = playerList;
-        //    StateHasChanged();
-        //}
-
         protected async Task LeaveTable()
         {
             await LocalStorageService.RemoveItemAsync("currentTable");
@@ -172,19 +125,23 @@ namespace Poker.Client.Pages
 
         }
 
-        protected async void MarkReady()
+        protected async Task MarkReady()
         {
             var formModal = ModalService.Show<JoinTable>("Join table");
             var result = await formModal.Result;
             if (result.Cancelled) return;
             await _hubConnection.SendAsync("MarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"), result.Data);
-
+            StateService.CallRequestRefresh();
+            await Task.Delay(500);
+            StateService.CallRequestRefresh();
         }
 
-        protected async void UnmarkReady()
+        protected async Task UnmarkReady()
         {
             await _hubConnection.SendAsync("UnmarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"));
-
+            StateService.CallRequestRefresh();
+            await Task.Delay(500);
+            StateService.CallRequestRefresh();
         }
 
         protected async Task Check()
@@ -199,12 +156,22 @@ namespace Poker.Client.Pages
 
         protected async Task Raise()
         {
-            await _hubConnection.SendAsync("ActionRaise", await LocalStorageService.GetItemAsync<int>("currentTable"),1);
+            if (GameInformation.PlayerRaise > 0 &&
+                GameInformation.Players.First(e => e.Username == AuthState.User.Identity.Name).GameMoney >
+                GameInformation.PlayerRaise + GameInformation.RaiseAmount)
+            {
+                await _hubConnection.SendAsync("ActionRaise", await LocalStorageService.GetItemAsync<int>("currentTable"), GameInformation.PlayerRaise);
+            }
+            GameInformation.PlayerRaise = 0;
         }
 
         protected async Task Call()
         {
             await _hubConnection.SendAsync("ActionCall", await LocalStorageService.GetItemAsync<int>("currentTable"));
+        }
+        protected async Task AllIn()
+        {
+            await _hubConnection.SendAsync("ActionAllIn", await LocalStorageService.GetItemAsync<int>("currentTable"));
         }
     }
 }
