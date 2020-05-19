@@ -8,8 +8,6 @@ namespace Poker.Shared
     {
         Playing,
         Folded,
-        Raised,
-        HasToRaise,
         Left
     }
 }

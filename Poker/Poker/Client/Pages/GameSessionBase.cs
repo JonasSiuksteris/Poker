@@ -90,6 +90,7 @@ namespace Poker.Client.Pages
                 GameInformation.Hand = playerStateModel.HandCards ?? new List<Card>();
                 GameInformation.GameInProgress = playerStateModel.GameInProgress;
                 GameInformation.RaiseAmount = playerStateModel.RaiseAmount;
+                GameInformation.Pots = playerStateModel.Pots ?? new List<Pot>();
                 if (GameInformation.GameInProgress == false)
                 {
                     foreach (var gameInformationPlayer in GameInformation.Players)

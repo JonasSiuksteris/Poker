@@ -9,6 +9,7 @@ namespace Poker.Shared
         public List<GamePlayer> Players { get; set; }
         public List<Card> TableCards { get; set; }
         public List<Card> Hand { get; set; }
+        public List<Pot> Pots { get; set; }
         public bool GameInProgress { get; set; }
         public string CurrentPlayer { get; set; }
         public int SmallBlindIndex { get; set; }
@@ -20,6 +21,7 @@ namespace Poker.Shared
         {
             TableCards = new List<Card>();
             Hand = new List<Card>();
+            Pots = new List<Pot>();
             GameInProgress = false;
             RaiseAmount = 0;
             PlayerRaise = 0;

@@ -6,7 +6,8 @@ namespace Poker.Shared
 {
     public class Pot
     {
-        public List<string> Winners { get; set; } = new List<string>();
+        public HashSet<string> Players { get; set; } = new HashSet<string>();
         public int PotAmount { get; set; }
+        public string Winner { get; set; }
     }
 }

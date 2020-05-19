@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -46,8 +47,9 @@ namespace Poker.Server.Hubs
 
                     if (Games.First(e => e.TableId == tableId).Players.Count(e => e.ActionState != PlayerActionState.Left) < 2)
                     {
-                        _ =Clients.Group(tableId.ToString())
-                            .SendAsync("ReceiveWinner", GetWinner(tableId));
+                        UpdatePot(tableId);
+                        GetAndAwardWinners(tableId);
+                        PlayerStateRefresh(tableId);
                         smallBlindIndexTemp = Games.First(e => e.TableId == tableId).SmallBlindIndex;
                         Games.Remove(Games.FirstOrDefault(e => e.TableId == tableId));
                         Thread.Sleep(10000);
@@ -213,13 +215,20 @@ namespace Poker.Server.Hubs
                 //PlayerFolded
                 Games.First(e => e.TableId == tableId).Players
                     .First(e => e.Name == Context.User.Identity.Name).ActionState = PlayerActionState.Folded;
+
+                //Remove from pots
+                foreach (var pot in Games.First(e => e.TableId == tableId).Winnings)
+                {
+                    pot.Players.Remove(Context.User.Identity.Name);
+                }
+                
                 //CheckIfOnlyOneLeft
                 if (Games.First(e => e.TableId == tableId).Players
                         .Count(e => e.ActionState == PlayerActionState.Playing) == 1)
                 {
-                    var winner = GetWinner(tableId);
-                    _ = Clients.Group(tableId.ToString())
-                        .SendAsync("ReceiveWinner", winner);
+                    UpdatePot(tableId);
+                    GetAndAwardWinners(tableId);
+                    PlayerStateRefresh(tableId);
 
                     Thread.Sleep(10000);
 
@@ -338,6 +347,7 @@ namespace Poker.Server.Hubs
                 if (Games.First(e => e.TableId == tableId).Index == currentGame.RoundEndIndex)
                 {
                     CommunityCardsController(tableId);
+                    UpdatePot(tableId);
                     Games.First(e => e.TableId == tableId).RaiseAmount = 0;
                     Games.First(e => e.TableId == tableId).RoundEndIndex = Games.First(e => e.TableId == tableId).BigBlindIndex + 1;
                     Games.First(e => e.TableId == tableId).Index = Games.First(e => e.TableId == tableId).BigBlindIndex + 1;
@@ -410,25 +420,69 @@ namespace Poker.Server.Hubs
                     break;
 
                 case CommunityCardsActions.River:
-                    var winner = GetWinner(tableId);
-                    _ = Clients.Group(tableId.ToString())
-                        .SendAsync("ReceiveWinner", winner);
+                    GetAndAwardWinners(tableId);
+                    PlayerStateRefresh(tableId);
                     Games.First(e => e.TableId == tableId).CommunityCardsActions++;
                     break;
             }
         }
 
-        public string GetWinner(int tableId)
+        private void UpdatePot(int tableId)
+        {
+            var players = Games.First(e => e.TableId == tableId)
+                .Players.Where(player => player.RoundBet > 0 && player.ActionState == PlayerActionState.Playing)
+                .ToList();
+
+            while (players.Any())
+            {
+                var pot = new Pot { PotAmount = players.Min(e => e.RoundBet) };
+
+                foreach (var player in players)
+                {
+                    player.RoundBet -= pot.PotAmount;
+                    pot.Players.Add(player.Name);
+                }
+
+                pot.PotAmount *= players.Count;
+
+                if (Games.First(e => e.TableId == tableId).Winnings
+                        .Count(winningPot => winningPot.Players.SetEquals(pot.Players)) > 0)
+                {
+                    Games.First(e => e.TableId == tableId).Winnings.First(e => e.Players.SetEquals(pot.Players)).PotAmount +=
+                        pot.PotAmount;
+                }
+                else
+                {
+                    Games.First(e => e.TableId == tableId).Winnings.Add(pot);
+                }
+
+                players = players.Where(e => e.RoundBet > 0).ToList();
+            }
+        }
+
+        private void GetAndAwardWinners(int tableId)
         {
             var communityCards = Games.First(e => e.TableId == tableId).TableCards;
-            var evaluatedPlayers = new List<Player>();
+            var evaluatedPlayers = new Hashtable();
+
             foreach (var player in Games.First(e => e.TableId == tableId).Players.Where(e => e.ActionState == PlayerActionState.Playing))
             {
                 player.HandStrength = HandEvaluation.Evaluate(communityCards.Concat(player.HandCards).ToList());
-                evaluatedPlayers.Add(player);
+                evaluatedPlayers.Add(player.Name, player.HandStrength);
             }
 
-            return evaluatedPlayers.Where(e => e.ActionState == PlayerActionState.Playing).MinBy(e => e.HandStrength).First().Name;
+            foreach (var pot in Games.First(e => e.TableId == tableId).Winnings)
+            {
+                var highestHand = HandStrength.Nothing;
+                string winner = null;
+                foreach (var potPlayer in pot.Players.Where(potPlayer => highestHand > (HandStrength) evaluatedPlayers[potPlayer]))
+                {
+                    highestHand = (HandStrength) evaluatedPlayers[potPlayer];
+                    winner = potPlayer;
+                }
+                pot.Winner = winner;
+                Users.First(e => e.Name == pot.Winner).Balance += pot.PotAmount;
+            }
         }
 
         public void PlayerStateRefresh(int tableId)
@@ -457,6 +511,8 @@ namespace Poker.Server.Hubs
             playerState.CommunityCards = Games.FirstOrDefault(e => e.TableId == tableId)?.TableCards;
 
             playerState.GameInProgress = playerState.CommunityCards != null;
+
+            playerState.Pots = Games.FirstOrDefault(e => e.TableId == tableId)?.Winnings;
 
             if (Games.FirstOrDefault(e => e.TableId == tableId)?.RaiseAmount > 0)
                 playerState.RaiseAmount = Games.First(e => e.TableId == tableId).RaiseAmount;

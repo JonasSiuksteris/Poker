@@ -15,6 +15,7 @@ namespace Poker.Shared
         ThreeOfAKind,
         TwoPair,
         OnePair,
-        HighCard
+        HighCard,
+        Nothing
     }
 }

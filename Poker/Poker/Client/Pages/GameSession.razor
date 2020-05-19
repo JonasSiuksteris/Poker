@@ -79,6 +79,20 @@ else
                     {
                         <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error"/>
                     }
+                    if(GameInformation.Pots.Any())
+                    {
+                        foreach (var pot in GameInformation.Pots)
+                        {
+                            if (string.IsNullOrEmpty(pot.Winner))
+                            {
+                                <p>@pot.PotAmount</p>
+                            }
+                            else
+                            {
+                                <p>@pot.Winner won @pot.PotAmount</p>
+                            }
+                        }
+                    }
                 }
             </div>
             <div class="col-md-3">
