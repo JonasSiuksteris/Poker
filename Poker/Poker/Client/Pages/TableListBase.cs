@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared;
-using Poker.Shared.Models;
 
 namespace Poker.Client.Pages
 {

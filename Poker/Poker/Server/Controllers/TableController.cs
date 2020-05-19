@@ -29,6 +29,27 @@ namespace Poker.Server.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<GetTablesResult>> GetTables()
+        {
+            try
+            {
+                return (new GetTablesResult
+                {
+                    Successful = true,
+                    PokerTables = await _tableRepository.GetTables()
+                });
+            }
+            catch (Exception)
+            {
+                return (new GetTablesResult
+                {
+                    Successful = false,
+                    Error = "Error processing request"
+                });
+            }
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CreateTableResult>> Create([FromBody] CreateTableModel model)
@@ -39,8 +60,8 @@ namespace Poker.Server.Controllers
                 {
                     return new CreateTableResult
                     {
-                        Successful = false, 
-                        Errors = new List<string>() {"Invalid table model"}
+                        Successful = false,
+                        Errors = new List<string>() { "Invalid table model" }
                     };
                 }
 
@@ -67,29 +88,22 @@ namespace Poker.Server.Controllers
                 return new CreateTableResult
                 {
                     Successful = false,
-                    Errors = new List<string>() {"Unexpected error occured. Try again or contact support"}
+                    Errors = new List<string>() { "Unexpected error occured. Try again or contact support" }
                 };
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult<GetTablesResult>> GetTables()
+        [HttpPost]
+        public async Task<ActionResult<PokerTable>> GetTableById(int id)
         {
             try
             {
-                return (new GetTablesResult
-                {
-                    Successful = true,
-                    PokerTables = await _tableRepository.GetTables()
-                });
+                return await _tableRepository.GetTableById(id);
             }
             catch (Exception)
             {
-                return (new GetTablesResult
-                {
-                    Successful = false,
-                    Error = "Error processing request"
-                });
+                return new PokerTable();
+                // ignored
             }
         }
 
@@ -115,60 +129,6 @@ namespace Poker.Server.Controllers
                 });
             }
         }
-
-        //[Authorize(Roles = "User")]
-        //[HttpPost("join")]
-        //public async Task<ActionResult<JoinTableResult>> JoinTable([FromBody] int tableId)
-        //{
-        //    try
-        //    {
-        //        var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-        //        await _tableRepository.AddUserToTable(tableId, currentUser.Id);
-        //        currentUser.CurrentTableId = tableId;
-        //        await _userManager.UpdateAsync(currentUser);
-
-        //        return (new JoinTableResult
-        //        {
-        //            Successful = true
-        //        });
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return (new JoinTableResult
-        //        {
-        //            Successful = false,
-        //            Error = "Error processing request"
-        //        });
-        //    }
-
-        //}
-
-        //[Authorize(Roles = "User")]
-        //[HttpPost("leave")]
-        //public async Task<ActionResult<JoinTableResult>> LeaveTable()
-        //{
-        //    try
-        //    {
-        //        var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-        //        await _tableRepository.RemoveUserFromTable(currentUser.CurrentTableId, currentUser.Id);
-        //        currentUser.CurrentTableId = 0;
-        //        await _userManager.UpdateAsync(currentUser);
-
-        //        return (new JoinTableResult
-        //        {
-        //            Successful = true
-        //        });
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return (new JoinTableResult
-        //        {
-        //            Successful = false,
-        //            Error = "Error processing request"
-        //        });
-        //    }
-
-        //}
 
     }
 }

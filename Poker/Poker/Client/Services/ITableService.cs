@@ -13,11 +13,8 @@ namespace Poker.Client.Services
 
         Task<GetTablesResult> GetList();
 
+        Task<PokerTable> GetById(int id);
+
         Task<DeleteTableResult> Delete(int id);
-
-        Task<JoinTableResult> AddPlayer(int id);
-
-        Task<JoinTableResult> RemovePlayer();
-
     }
 }

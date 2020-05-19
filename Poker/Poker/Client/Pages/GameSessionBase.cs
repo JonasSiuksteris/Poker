@@ -41,7 +41,6 @@ namespace Poker.Client.Pages
         {
             AuthState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/gameHub"))
                 .Build();

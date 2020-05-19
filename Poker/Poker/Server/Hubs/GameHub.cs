@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 using MoreLinq;
 using Poker.Server.Models;
 using Poker.Server.PokerEvaluators;
+using Poker.Server.Repositories;
 using Poker.Shared;
 using Poker.Shared.Models;
 
@@ -17,12 +18,15 @@ namespace Poker.Server.Hubs
     public class GameHub : Hub
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITableRepository _tableRepository;
+
         public static List<Game> Games { get; set; } = new List<Game>();
         public static List<User> Users { get; set; } = new List<User>();
 
-        public GameHub(UserManager<ApplicationUser> userManager)
+        public GameHub(UserManager<ApplicationUser> userManager, ITableRepository tableRepository)
         {
             _userManager = userManager;
+            _tableRepository = tableRepository;
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -77,8 +81,16 @@ namespace Poker.Server.Hubs
             }
         }
 
-        public async void AddToUsers(int tableId)
+        public async Task AddToUsers(int tableId)
         {
+            var currentTable = await _tableRepository.GetTableById(tableId);
+
+            if (Users.Count(e => e.TableId == tableId) >= currentTable.MaxPlayers)
+            {
+                _ = Clients.Client(Context.ConnectionId).SendAsync("ReceiveKick");
+                return;
+            }
+
             if (Users.Any(e => e.Name == Context.User.Identity.Name))
             {
                 _ =Clients.Client(Context.ConnectionId).SendAsync("ReceiveKick");
@@ -116,7 +128,7 @@ namespace Poker.Server.Hubs
         }
 
 
-        public async void RemoveFromUsers(int tableId)
+        public async Task RemoveFromUsers(int tableId)
         {
             await DisconnectPlayer(Context.User.Identity.Name);
         }
@@ -131,7 +143,7 @@ namespace Poker.Server.Hubs
 
             if (Users.Where(e => e.TableId == tableId).Count(e => e.IsReady) >= 2 && Games.All(e => e.TableId != tableId))
             {
-                StartGame(tableId, 0);
+                await StartGame(tableId, 0);
             }
         }
 
@@ -165,7 +177,7 @@ namespace Poker.Server.Hubs
             await _userManager.UpdateAsync(user);
         }
 
-        private async void  StartGame(int tableId, int smallBlindPosition)
+        private async Task StartGame(int tableId, int smallBlindPosition)
         {
             //Initialize Game
 
@@ -236,7 +248,7 @@ namespace Poker.Server.Hubs
 
                     if (Users.Where(e => e.TableId == tableId).Count(e => e.IsReady) >= 2 && Games.All(e => e.TableId != tableId))
                     {
-                        StartGame(tableId, currentGame.SmallBlindIndex + 1);
+                        await StartGame(tableId, currentGame.SmallBlindIndex + 1);
                     }
                     else
                     {
@@ -357,7 +369,7 @@ namespace Poker.Server.Hubs
                         player.RoundBet = 0;
                     }
                 }
-            } while (currentGame.GetPlayerByIndex(currentGame.Index).ActionState != PlayerActionState.Playing);
+            } while (currentGame.GetPlayerByIndex(currentGame.Index).ActionState != PlayerActionState.Playing || Users.First(e => e.Name == currentGame.GetPlayerByIndex(currentGame.Index).Name).Balance == 0);
 
             if (Games.First(e => e.TableId == tableId).CommunityCardsActions ==
                 CommunityCardsActions.AfterRiver)
@@ -368,7 +380,7 @@ namespace Poker.Server.Hubs
 
                 if (Users.Where(e => e.TableId == tableId).Count(e => e.IsReady) >= 2 && Games.All(e => e.TableId != tableId))
                 {
-                    StartGame(tableId, currentGame.SmallBlindIndex + 1);
+                    await StartGame(tableId, currentGame.SmallBlindIndex + 1);
                 }
                 else
                 {

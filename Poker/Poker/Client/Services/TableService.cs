@@ -30,21 +30,15 @@ namespace Poker.Client.Services
             return result;
         }
 
+        public async Task<PokerTable> GetById(int id)
+        {
+            var result = await _httpClient.PostJsonAsync<PokerTable>("api/table", id);
+            return result;
+        }
+
         public async Task<DeleteTableResult> Delete(int id)
         {
             var result = await _httpClient.PostJsonAsync<DeleteTableResult>("api/table/delete", id);
-            return result;
-        }
-
-        public async Task<JoinTableResult> AddPlayer(int id)
-        {
-            var result = await _httpClient.PostJsonAsync<JoinTableResult>("api/table/join", id);
-            return result;
-        }
-
-        public async Task<JoinTableResult> RemovePlayer()
-        {
-            var result = await _httpClient.PostJsonAsync<JoinTableResult>("api/table/leave", null);
             return result;
         }
     }
