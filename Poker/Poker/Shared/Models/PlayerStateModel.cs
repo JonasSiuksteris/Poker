@@ -12,6 +12,7 @@ namespace Poker.Shared.Models
         public List<Pot> Pots { get; set; }
         public bool GameInProgress { get; set; }
         public int RaiseAmount { get; set; }
+        public int SmallBlind { get; set; }
         public PlayerStateModel()
         {
             Players = new List<GamePlayer>();
@@ -19,6 +20,7 @@ namespace Poker.Shared.Models
             HandCards = new List<Card>();
             Pots = new List<Pot>();
             RaiseAmount = 0;
+            SmallBlind = 0;
         }
     }
 }

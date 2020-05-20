@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
-using MoreLinq;
 using Poker.Server.Models;
 using Poker.Server.PokerEvaluators;
 using Poker.Server.Repositories;
@@ -68,7 +67,7 @@ namespace Poker.Server.Hubs
                 }
                 if (Users.Count(e => e.IsReady) >= 2 && Games.All(e => e.TableId != tableId))
                 {
-                    StartGame(tableId, smallBlindIndexTemp + 1);
+                    await StartGame(tableId, smallBlindIndexTemp + 1);
                 }
                 else
                 {
@@ -87,13 +86,13 @@ namespace Poker.Server.Hubs
 
             if (Users.Count(e => e.TableId == tableId) >= currentTable.MaxPlayers)
             {
-                _ = Clients.Client(Context.ConnectionId).SendAsync("ReceiveKick");
+                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveKick");
                 return;
             }
 
             if (Users.Any(e => e.Name == Context.User.Identity.Name))
             {
-                _ =Clients.Client(Context.ConnectionId).SendAsync("ReceiveKick");
+                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveKick");
                 return;
             }
 
@@ -180,17 +179,50 @@ namespace Poker.Server.Hubs
         private async Task StartGame(int tableId, int smallBlindPosition)
         {
             //Initialize Game
+            var currentTableInfo = await _tableRepository.GetTableById(tableId);
 
-            var newGame = new Game(tableId, smallBlindPosition);
+            var newGame = new Game(tableId, smallBlindPosition, currentTableInfo.SmallBlind);
 
-
+            //Adding players to table
             foreach (var user in Users.Where(user => user.IsReady && user.TableId == tableId))
             {
                 newGame.Players.Add(new Player{Name = user.Name, RoundBet = 0});
                 user.InGame = true;
             }
 
-            PlayerStateRefresh(tableId);
+            newGame.NormalizeAllIndexes();
+
+            //Small blind
+            if (Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.SmallBlindIndex)).Balance >=
+                newGame.SmallBlind)
+            {
+                Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.SmallBlindIndex)).Balance -=
+                    newGame.SmallBlind;
+                newGame.Players.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.SmallBlindIndex)).RoundBet +=
+                    newGame.SmallBlind;
+            }
+            else
+            {
+                newGame.Players.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.SmallBlindIndex)).RoundBet +=
+                    Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.SmallBlindIndex)).Balance;
+                Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.SmallBlindIndex)).Balance = 0;
+            }
+
+            //Big blind
+            if (Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.BigBlindIndex)).Balance >=
+    newGame.SmallBlind * 2)
+            {
+                Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.BigBlindIndex)).Balance -=
+                    newGame.SmallBlind * 2;
+                newGame.Players.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.BigBlindIndex)).RoundBet +=
+                    newGame.SmallBlind * 2;
+            }
+            else
+            {
+                newGame.Players.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.BigBlindIndex)).RoundBet +=
+                    Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.BigBlindIndex)).Balance;
+                Users.First(e => e.Name == newGame.GetPlayerNameByIndex(newGame.BigBlindIndex)).Balance = 0;
+            }
 
             //Deal cards
 
@@ -200,12 +232,10 @@ namespace Poker.Server.Hubs
                 {
                     player.HandCards.AddRange(newGame.Deck.DrawCards(2));
                     var connectionId = Users.First(e => e.Name == player.Name).ConnectionId;
-                    if (Users.First(e => e.Name == player.Name).InGame)
-                        _ = Clients.Client(connectionId).SendAsync("ReceiveStartingHand", player.HandCards);
+                    if (Users.First(e => e.Name == player.Name).InGame) 
+                        await Clients.Client(connectionId).SendAsync("ReceiveStartingHand", player.HandCards);
                 }
             }
-
-            newGame.NormalizeAllIndexes();
 
             Games.Add(newGame);
 
@@ -369,7 +399,9 @@ namespace Poker.Server.Hubs
                         player.RoundBet = 0;
                     }
                 }
-            } while (currentGame.GetPlayerByIndex(currentGame.Index).ActionState != PlayerActionState.Playing || Users.First(e => e.Name == currentGame.GetPlayerByIndex(currentGame.Index).Name).Balance == 0);
+            } while ((currentGame.GetPlayerByIndex(currentGame.Index).ActionState != PlayerActionState.Playing || Users.First(e => e.Name == currentGame.GetPlayerByIndex(currentGame.Index).Name).Balance == 0
+                     || currentGame.Players.Count(e => e.ActionState == PlayerActionState.Playing) < 2 ) && Games.First(e => e.TableId == tableId).CommunityCardsActions !=
+                     CommunityCardsActions.AfterRiver);
 
             if (Games.First(e => e.TableId == tableId).CommunityCardsActions ==
                 CommunityCardsActions.AfterRiver)
@@ -410,7 +442,7 @@ namespace Poker.Server.Hubs
                     var flop = Games.FirstOrDefault(e => e.TableId == tableId)?.Deck.DrawCards(3);
                     Games.FirstOrDefault(e => e.TableId == tableId)?.TableCards.AddRange(flop);
                     Games.First(e => e.TableId == tableId).CommunityCardsActions++;
-                    _ = Clients.Group(tableId.ToString())
+                    Clients.Group(tableId.ToString())
                         .SendAsync("ReceiveFlop", flop);
 
                     break;
@@ -419,7 +451,7 @@ namespace Poker.Server.Hubs
                     var turn = Games.FirstOrDefault(e => e.TableId == tableId)?.Deck.DrawCards(1);
                     Games.FirstOrDefault(e => e.TableId == tableId)?.TableCards.AddRange(turn);
                     Games.First(e => e.TableId == tableId).CommunityCardsActions++;
-                    _ = Clients.Group(tableId.ToString())
+                    Clients.Group(tableId.ToString())
                         .SendAsync("ReceiveTurnOrRiver", turn);
                     break;
 
@@ -427,7 +459,7 @@ namespace Poker.Server.Hubs
                     var river = Games.FirstOrDefault(e => e.TableId == tableId)?.Deck.DrawCards(1);
                     Games.FirstOrDefault(e => e.TableId == tableId)?.TableCards.AddRange(river);
                     Games.First(e => e.TableId == tableId).CommunityCardsActions++;
-                    _ = Clients.Group(tableId.ToString())
+                    Clients.Group(tableId.ToString())
                         .SendAsync("ReceiveTurnOrRiver", river);
                     break;
 
@@ -525,6 +557,9 @@ namespace Poker.Server.Hubs
             playerState.GameInProgress = playerState.CommunityCards != null;
 
             playerState.Pots = Games.FirstOrDefault(e => e.TableId == tableId)?.Winnings;
+
+            if(Games.FirstOrDefault(e => e.TableId == tableId) != null)
+                playerState.SmallBlind = Games.First(e => e.TableId == tableId).SmallBlind;
 
             if (Games.FirstOrDefault(e => e.TableId == tableId)?.RaiseAmount > 0)
                 playerState.RaiseAmount = Games.First(e => e.TableId == tableId).RaiseAmount;

@@ -49,7 +49,7 @@ namespace Poker.Server.Controllers
                 });
             }
         }
-
+        
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CreateTableResult>> Create([FromBody] CreateTableModel model)
@@ -93,7 +93,7 @@ namespace Poker.Server.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<PokerTable>> GetTableById(int id)
         {
             try

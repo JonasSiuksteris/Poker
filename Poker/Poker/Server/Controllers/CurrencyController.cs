@@ -43,7 +43,7 @@ namespace Poker.Server.Controllers
 
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         [HttpGet]
         public async Task<int> Balance()
         {

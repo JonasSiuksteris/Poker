@@ -62,26 +62,5 @@ namespace Poker.Server.Repositories
             await _appDbContext.SaveChangesAsync();
             return result;
         }
-
-        //public async Task AddUserToTable(int tableId, string userId)
-        //{
-        //    var newPlayer = new PlayerTable
-        //    {
-        //        TableId = tableId,
-        //        UserId = userId
-        //    };
-        //    await _appDbContext.PlayerTables.AddAsync(newPlayer);
-        //    await _appDbContext.SaveChangesAsync();
-        //}
-
-        //public async Task RemoveUserFromTable(int tableId, string userId)
-        //{
-
-        //    var result = await _appDbContext.PlayerTables.FirstOrDefaultAsync(e => e.UserId == userId && e.TableId == tableId);
-        //    if (result == null) return;
-
-        //    _appDbContext.PlayerTables.Remove(result);
-        //    await _appDbContext.SaveChangesAsync();
-        //}
     }
 }

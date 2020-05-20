@@ -32,6 +32,15 @@
                          @bind-Value="PokerTable.MaxPlayers" />
         </div>
     </div>
+    <div class="form-group row">
+        <label for="smallBlind" class="col-sm-3 col-form-label">
+            Small Blinds
+        </label>
+        <div class="col-sm-9">
+            <InputNumber type="maxPlayers" id="smallBlind" class="form-control" placeholder="Small Blind Amount"
+                         @bind-Value="PokerTable.SmallBlind" />
+        </div>
+    </div>
     <div class="text-center">
         <input type="submit" class="btn btn-primary" Value="Confirm" />
         <button @onclick="BlazoredModal.Cancel" class="btn btn-danger">Cancel</button>

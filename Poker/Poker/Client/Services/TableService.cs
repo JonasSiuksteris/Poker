@@ -32,7 +32,7 @@ namespace Poker.Client.Services
 
         public async Task<PokerTable> GetById(int id)
         {
-            var result = await _httpClient.PostJsonAsync<PokerTable>("api/table", id);
+            var result = await _httpClient.GetJsonAsync<PokerTable>($"api/table/{id}");
             return result;
         }
 

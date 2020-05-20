@@ -25,11 +25,13 @@ namespace Poker.Server.Models
 
         public int RaiseAmount { get; set; }
 
+        public int SmallBlind { get; set; }
+
         public List<Pot> Winnings { get; set; }
 
         public CommunityCardsActions CommunityCardsActions { get; set; }
 
-        public Game(int tableId, int smallBlindIndex)
+        public Game(int tableId, int smallBlindIndex, int smallBlind)
         {
             TableId = tableId;
             Players = new List<Player>();
@@ -41,7 +43,8 @@ namespace Poker.Server.Models
             RoundEndIndex = smallBlindIndex + 2;
             Index = smallBlindIndex + 2;
             CommunityCardsActions = CommunityCardsActions.PreFlop;
-            RaiseAmount = 0;
+            SmallBlind = smallBlind;
+            RaiseAmount = SmallBlind * 2;
         }
         public int NormalizeIndex(int index)
         {
