@@ -8,46 +8,34 @@
 }
 else
 {
-    <div class="container ">
+    <div class="container">
         <div class="row">
-            <div class="col-md-3">
-                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 2) != null)
-                {
-                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 2)" />
-                }
-                else
-                {
-                    <p>Empty seat</p>
-                }
-            </div>
-            <div class="col-md-5">
-                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 3) != null)
-                {
-                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 3)" />
-                }
-                else
-                {
-                    <p>Empty seat</p>
-                }
-            </div>
-            <div class="col-md-3">
-                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 4) != null)
-                {
-                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 4)" />
-                }
-                else
-                {
-                    <p>Empty seat</p>
-                }
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-9">
                 <div class="row">
-                    <div class="col-md-12">
-                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 1) != null)
+                    <div class="col-md-3">
+                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 2) != null)
                         {
-                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 1)" />
+                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 2)" />
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
+                    </div>
+                    <div class="col-md-5">
+                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 3) != null)
+                        {
+                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 3)" />
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
+                    </div>
+                    <div class="col-md-3">
+                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 4) != null)
+                        {
+                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 4)" />
                         }
                         else
                         {
@@ -56,116 +44,154 @@ else
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 0) != null)
-                        {
-                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 0)" />
-                        }
-                        else
-                        {
-                            <p>Empty seat</p>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5">
-                @if (!string.IsNullOrEmpty(GameInformation.Winner))
-                {
-                    <p>@GameInformation.Winner</p>
-                }
-                @if (GameInformation.GameInProgress && GameInformation.TableCards.Count > 0)
-                {
-                    foreach (var card in GameInformation.TableCards)
-                    {
-                        <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error"/>
-                    }
-                    if(GameInformation.Pots.Any())
-                    {
-                        foreach (var pot in GameInformation.Pots)
-                        {
-                            if (string.IsNullOrEmpty(pot.Winner))
-                            {
-                                <p>@pot.PotAmount</p>
-                            }
-                            else
-                            {
-                                <p>@pot.Winner won @pot.PotAmount</p>
-                            }
-                        }
-                    }
-                }
-            </div>
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="col-md-12">
-                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 5) != null)
-                        {
-                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 5)" />
-                        }
-                        else
-                        {
-                            <p>Empty seat</p>
-                        }
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 6) != null)
-                        {
-                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 6)" />
-                        }
-                        else
-                        {
-                            <p>Empty seat</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <button @onclick="@LeaveTable" class="btn btn-danger m-1">Leave table</button>
-                @if (GameInformation.Players.FirstOrDefault(e => e.Username == AuthState.User.Identity.Name) != null &&
-                     !GameInformation.Players.First(e => e.Username == AuthState.User.Identity.Name).IsReady)
-                {
-                    <button @onclick="@MarkReady" class="btn btn-primary m-1">Join game</button>
-                }
-                else
-                {
-                    <button @onclick="@UnmarkReady" class="btn btn-primary m-1">Leave game</button>
-                }
-            </div>
-            <div class="col-md-3">
-                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 7) != null)
-                {
-                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 7)" />
-                }
-                else
-                {
-                    <p>Empty seat</p>
-                }
-            </div>
-            <div class="col-md-5">
-                @if (GameInformation.GameInProgress &&GameInformation.CurrentPlayer == AuthState.User.Identity.Name)
-                {
-                    <div class="row">
-                        @if (GameInformation.RaiseAmount > 0)
-                        {
-                            <button @onclick="@Call" class="btn btn-primary m-1">Call</button>
-                        }
-                        else
-                        {
-                            <button @onclick="@Check" class="btn btn-primary m-1">Check</button>
-
-                        }
-                        <button @onclick="@Fold" class="btn btn-primary m-1">Fold</button>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 1) != null)
+                                {
+                                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 1)" />
+                                }
+                                else
+                                {
+                                    <p>Empty seat</p>
+                                }
+                            </div>
                         </div>
-                    <div class="row">
-                        <input @bind="@GameInformation.PlayerRaise" type="number" class="form-control col-md-4">
-                        <button @onclick="@Raise" class="btn btn-primary m-1" >Raise</button>
-                        <button @onclick="@AllIn" class="btn btn-primary m-1" >All-In</button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 0) != null)
+                                {
+                                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 0)" />
+                                }
+                                else
+                                {
+                                    <p>Empty seat</p>
+                                }
+                            </div>
+                        </div>
                     </div>
-                }
+                    <div class="col-md-5">
+                        @if (!string.IsNullOrEmpty(GameInformation.Winner))
+                        {
+                            <p>@GameInformation.Winner</p>
+                        }
+                        @if (GameInformation.GameInProgress && GameInformation.TableCards.Count > 0)
+                        {
+                            foreach (var card in GameInformation.TableCards)
+                            {
+                                <img style="height: 100px; width: auto" src="img/Cards/@string.Join("",card.CardNumber.ToString(),card.CardSuit.ToString(),".png")" alt="Error" />
+                            }
+                            if (GameInformation.Pots.Any())
+                            {
+                                foreach (var pot in GameInformation.Pots)
+                                {
+                                    if (string.IsNullOrEmpty(pot.Winner))
+                                    {
+                                        <p>@pot.PotAmount</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@pot.Winner won @pot.PotAmount</p>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 5) != null)
+                                {
+                                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 5)" />
+                                }
+                                else
+                                {
+                                    <p>Empty seat</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 6) != null)
+                                {
+                                    <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 6)" />
+                                }
+                                else
+                                {
+                                    <p>Empty seat</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <button @onclick="@LeaveTable" class="btn btn-danger m-1">Leave table</button>
+                        @if (GameInformation.Players.FirstOrDefault(e => e.Username == AuthState.User.Identity.Name) != null &&
+                            !GameInformation.Players.First(e => e.Username == AuthState.User.Identity.Name).IsReady)
+                        {
+                            <button @onclick="@MarkReady" class="btn btn-primary m-1">Join game</button>
+                        }
+                        else
+                        {
+                            <button @onclick="@UnmarkReady" class="btn btn-primary m-1">Leave game</button>
+                        }
+                    </div>
+                    <div class="col-md-3">
+                        @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 7) != null)
+                        {
+                            <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 7)" />
+                        }
+                        else
+                        {
+                            <p>Empty seat</p>
+                        }
+                    </div>
+                    <div class="col-md-5">
+                        @if (GameInformation.GameInProgress && GameInformation.CurrentPlayer == AuthState.User.Identity.Name)
+                        {
+                            <div class="row">
+                                @if (GameInformation.RaiseAmount > 0)
+                                {
+                                    <button @onclick="@Call" class="btn btn-primary m-1">Call</button>
+                                }
+                                else
+                                {
+                                    <button @onclick="@Check" class="btn btn-primary m-1">Check</button>
+
+                                }
+                                <button @onclick="@Fold" class="btn btn-primary m-1">Fold</button>
+                            </div>
+                            <div class="row">
+                                <input @bind="@GameInformation.PlayerRaise" type="number" class="form-control col-md-4">
+                                <button @onclick="@Raise" class="btn btn-primary m-1">Raise</button>
+                                <button @onclick="@AllIn" class="btn btn-primary m-1">All-In</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card-header">
+                    Chat service
+                </div>
+                <div class="card-body overflow-auto" style="height: 60vh">
+                    @foreach (var message in ChatMessages)
+                    {
+                        <div>
+                            <p>@message.Sender : @message.Message</p>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label>
+                            Message:
+                            <input @bind="MessageInput"/>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary" @onclick="SendMessage">Send</button>
+                </div>
             </div>
         </div>
     </div>

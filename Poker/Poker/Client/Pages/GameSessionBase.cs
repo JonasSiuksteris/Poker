@@ -37,6 +37,10 @@ namespace Poker.Client.Pages
 
         public GameInformation GameInformation { get; set; } = new GameInformation{Players = new List<GamePlayer>()};
 
+        public string MessageInput { get; set; } = string.Empty;
+
+        public List<GetMessageResult> ChatMessages = new List<GetMessageResult>();
+
         protected override async Task OnInitializedAsync()
         {
             AuthState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -44,6 +48,13 @@ namespace Poker.Client.Pages
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/gameHub"))
                 .Build();
+
+            _hubConnection.On("ReceiveMessage", (object message) =>
+            {
+                var newMessage = JsonConvert.DeserializeObject<GetMessageResult>(message.ToString());
+                ChatMessages.Add(newMessage);
+                StateHasChanged();
+            });
 
             _hubConnection.On("ReceiveStartingHand", (object hand) =>
             {
@@ -172,6 +183,17 @@ namespace Poker.Client.Pages
         protected async Task AllIn()
         {
             await _hubConnection.SendAsync("ActionAllIn", await LocalStorageService.GetItemAsync<int>("currentTable"));
+        }
+
+        protected async Task SendMessage()
+        {
+            if (MessageInput.Length > 0)
+            {
+                await _hubConnection.SendAsync("SendMessage",
+                    await LocalStorageService.GetItemAsync<int>("currentTable"), MessageInput);
+                MessageInput = string.Empty;
+            }
+
         }
     }
 }

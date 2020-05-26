@@ -28,6 +28,12 @@ namespace Poker.Server.Hubs
             _tableRepository = tableRepository;
         }
 
+        public async Task SendMessage(int tableId, string message)
+        {
+            var newMessage = new GetMessageResult{Sender = Context.User.Identity.Name, Message = message};
+            await Clients.Groups(tableId.ToString()).SendAsync("ReceiveMessage", newMessage);
+        }
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await DisconnectPlayer(Context.User.Identity.Name);
