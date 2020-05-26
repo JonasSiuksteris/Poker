@@ -18,9 +18,5 @@ namespace Poker.Server.Repositories
         public Task<PokerTable> UpdateTable(PokerTable table);
 
         public Task<PokerTable> DeleteTable(int tableId);
-
-        //public Task AddUserToTable(int tableId, string userId);
-
-        //public Task RemoveUserFromTable(int tableId, string userId);
     }
 }

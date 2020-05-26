@@ -65,8 +65,8 @@ namespace Poker.Server
             services.AddSignalR();
 
             services.AddScoped<ITableRepository, TableRepository>();
+            services.AddScoped<IPlayerNotesRepository, PlayerNoteRepository>();
             services.AddScoped<IGameSessionRepository, GameSessionRepository>();
-
             services.AddControllersWithViews();
         }
 

@@ -27,7 +27,7 @@ namespace Poker.Client.Pages
 
         [Inject] public ITableService TableService { get; set; }
 
-        [Inject] public IGameSessionService GameSessionService { get; set; }
+        [Inject] public IPlayerNoteService PlayerNoteService { get; set; }
 
         [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
@@ -123,6 +123,8 @@ namespace Poker.Client.Pages
             await _hubConnection.StartAsync();
 
             await _hubConnection.SendAsync("AddToUsers", await LocalStorageService.GetItemAsync<int>("currentTable"));
+
+            GameInformation.PlayersNotes = (await PlayerNoteService.GetList()).PlayerNotes;
 
             await base.OnInitializedAsync();
 

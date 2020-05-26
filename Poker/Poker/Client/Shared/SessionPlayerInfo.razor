@@ -1,5 +1,13 @@
 ﻿@inherits SessionPlayerInfoBase
 
+@if (AuthState != null && GamePlayer.Username != AuthState.User.Identity.Name)
+{
+    <button @onclick="@Edit" class="btn btn-primary m-1">Edit info</button>
+}
+@if (GameInformation.PlayersNotes.FirstOrDefault(e => e.NotedPlayerName == GamePlayer.Username) != null)
+{
+    <p>@GameInformation.PlayersNotes.First(e => e.NotedPlayerName == GamePlayer.Username).Description</p>
+}
 @if (GamePlayer.IsPlaying)
 {
     <p>@GamePlayer.ActionState</p>

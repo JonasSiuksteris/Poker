@@ -10,6 +10,7 @@ namespace Poker.Shared
         public List<Card> TableCards { get; set; }
         public List<Card> Hand { get; set; }
         public List<Pot> Pots { get; set; }
+        public List<PlayerNote> PlayersNotes { get; set; } = new List<PlayerNote>();
         public bool GameInProgress { get; set; }
         public string CurrentPlayer { get; set; }
         public int SmallBlindIndex { get; set; }

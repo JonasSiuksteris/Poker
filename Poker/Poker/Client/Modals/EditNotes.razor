@@ -1,6 +1,6 @@
-﻿@inherits JoinTableBase
+﻿@inherits EditNotesBase
 
-<EditForm Model="@JoinTableModal" OnSubmit="@HandleSubmit">
+<EditForm Model="@EditNotesModel" OnSubmit="@EditNotes">
     @if (ShowErrors)
     {
         <div class="alert alert-danger" role="alert">
@@ -12,12 +12,9 @@
     }
     <hr />
     <div class="form-group row">
-        <label for="tableName" class="col-sm-3 col-form-label">
-            Amount to deposit
-        </label>
         <div class="col-sm-9">
-            <InputNumber id="tableName" class="form-control" placeholder="New Table"
-                       @bind-Value="JoinTableModal.Amount" />
+            <InputText class="form-control" placeholder="Notes"
+                         @bind-Value="@EditNotesModel.CurrentNote" />
         </div>
     </div>
     <div class="text-center">

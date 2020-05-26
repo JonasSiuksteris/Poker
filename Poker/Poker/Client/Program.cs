@@ -36,6 +36,7 @@ namespace Poker.Client
             builder.Services.AddScoped<ITableService, TableService>();
             builder.Services.AddScoped<IGameSessionService, GameSessionService>();
             builder.Services.AddScoped<IStateService, StateService>();
+            builder.Services.AddScoped<IPlayerNoteService, PlayerNoteService>();
 
             await builder.Build().RunAsync();
         }
