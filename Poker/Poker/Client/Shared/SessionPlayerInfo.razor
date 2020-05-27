@@ -2,25 +2,32 @@
 
 @if (AuthState != null && GamePlayer.Username != AuthState.User.Identity.Name)
 {
-    <button @onclick="@Edit" class="btn btn-primary m-1">Edit info</button>
+    <p>
+        PlayerInfo : <button @onclick="@Edit" class="btn btn-primary m-1 btn-sm">Edit info</button>
+    </p>
 }
 @if (GameInformation.PlayersNotes.FirstOrDefault(e => e.NotedPlayerName == GamePlayer.Username) != null)
 {
     <p>@GameInformation.PlayersNotes.First(e => e.NotedPlayerName == GamePlayer.Username).Description</p>
 }
+<p>@GamePlayer.Username</p>
 @if (GamePlayer.IsPlaying)
 {
     <p>@GamePlayer.ActionState</p>
 }
+else if (GamePlayer.IsReady)
+{
+    <p>Ready</p>
+}
+else
+{
+    <p>Not ready</p>
+}
 @if (GamePlayer.IsReady)
 {
-    <p>@GamePlayer.GameMoney</p>
+    <p>Money : @GamePlayer.GameMoney</p>
 }
-<p>@GamePlayer.Username</p>
-@if (!GamePlayer.IsPlaying)
-{
-    <p>@GamePlayer.IsReady</p>
-}
+
 
 @if (GameInformation.Hand.Count > 0 && GamePlayer.IsPlaying)
 {

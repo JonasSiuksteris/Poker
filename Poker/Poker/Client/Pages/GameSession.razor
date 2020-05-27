@@ -12,7 +12,7 @@ else
         <div class="row">
             <div class="col-md-9">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-3 border border-dark">
                         @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 2) != null)
                         {
                             <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 2)" />
@@ -22,7 +22,7 @@ else
                             <p>Empty seat</p>
                         }
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5  border border-dark">
                         @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 3) != null)
                         {
                             <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 3)" />
@@ -32,7 +32,7 @@ else
                             <p>Empty seat</p>
                         }
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3  border border-dark">
                         @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 4) != null)
                         {
                             <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 4)" />
@@ -46,7 +46,7 @@ else
                 <div class="row">
                     <div class="col-md-3">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12  border border-dark">
                                 @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 1) != null)
                                 {
                                     <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 1)" />
@@ -58,7 +58,7 @@ else
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12  border border-dark">
                                 @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 0) != null)
                                 {
                                     <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 0)" />
@@ -70,7 +70,7 @@ else
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5  border border-dark">
                         @if (!string.IsNullOrEmpty(GameInformation.Winner))
                         {
                             <p>@GameInformation.Winner</p>
@@ -99,7 +99,7 @@ else
                     </div>
                     <div class="col-md-3">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12  border border-dark">
                                 @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 5) != null)
                                 {
                                     <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 5)" />
@@ -111,7 +111,7 @@ else
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12  border border-dark">
                                 @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 6) != null)
                                 {
                                     <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 6)" />
@@ -125,10 +125,10 @@ else
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4  border border-dark">
                         <button @onclick="@LeaveTable" class="btn btn-danger m-1">Leave table</button>
                         @if (GameInformation.Players.FirstOrDefault(e => e.Username == AuthState.User.Identity.Name) != null &&
-                            !GameInformation.Players.First(e => e.Username == AuthState.User.Identity.Name).IsReady)
+                       !GameInformation.Players.First(e => e.Username == AuthState.User.Identity.Name).IsReady)
                         {
                             <button @onclick="@MarkReady" class="btn btn-primary m-1">Join game</button>
                         }
@@ -137,7 +137,7 @@ else
                             <button @onclick="@UnmarkReady" class="btn btn-primary m-1">Leave game</button>
                         }
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3  border border-dark">
                         @if (GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 7) != null)
                         {
                             <SessionPlayerInfo GameInformation="@GameInformation" GamePlayer="@GameInformation.Players.FirstOrDefault(e => e.SeatNumber == 7)" />
@@ -147,7 +147,7 @@ else
                             <p>Empty seat</p>
                         }
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5  border border-dark">
                         @if (GameInformation.GameInProgress && GameInformation.CurrentPlayer == AuthState.User.Identity.Name)
                         {
                             <div class="row">
@@ -187,7 +187,7 @@ else
                     <div class="form-group">
                         <label>
                             Message:
-                            <input @bind="MessageInput"/>
+                            <input @bind="MessageInput" />
                         </label>
                     </div>
                     <button class="btn btn-primary" @onclick="SendMessage">Send</button>
