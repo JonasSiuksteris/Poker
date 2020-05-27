@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Blazored.LocalStorage;
-using Blazored.Modal;
+﻿using Blazored.LocalStorage;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Poker.Client.Modals;
 using Poker.Client.Services;
 using Poker.Shared;
 using Poker.Shared.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Poker.Client.Pages
 {
@@ -25,8 +21,6 @@ namespace Poker.Client.Pages
         [Inject] public ILocalStorageService LocalStorageService { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
 
-        [Inject] public ITableService TableService { get; set; }
-
         [Inject] public IPlayerNoteService PlayerNoteService { get; set; }
 
         [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
@@ -35,7 +29,7 @@ namespace Poker.Client.Pages
 
         private HubConnection _hubConnection;
 
-        public GameInformation GameInformation { get; set; } = new GameInformation{Players = new List<GamePlayer>()};
+        public GameInformation GameInformation { get; set; } = new GameInformation { Players = new List<GamePlayer>() };
 
         public string MessageInput { get; set; } = string.Empty;
 

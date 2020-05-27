@@ -1,21 +1,18 @@
-using Poker.Server.Data;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
-using System.Text;
-using AutoMapper;
-using Microsoft.Net.Http.Headers;
+using Poker.Server.Data;
 using Poker.Server.Hubs;
 using Poker.Server.Repositories;
 using Poker.Shared;
+using System.Text;
 
 namespace Poker.Server
 {

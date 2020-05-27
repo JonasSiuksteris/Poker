@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Poker.Server.Data;
+using Poker.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Poker.Server.Data;
-using Poker.Server.Models;
-using Poker.Shared;
 
 namespace Poker.Server.Repositories
 {

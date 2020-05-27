@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Blazored.Modal.Services;
+﻿using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.SignalR.Client;
 using Poker.Client.Modals;
-using Poker.Client.Pages;
 using Poker.Client.Services;
+using System.Threading.Tasks;
 
 namespace Poker.Client.Shared
 {
@@ -29,7 +26,7 @@ namespace Poker.Client.Shared
 
         public int Balance { get; set; }
 
-        protected  override async Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             AuthState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             Balance = -1;

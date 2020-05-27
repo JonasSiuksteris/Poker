@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Poker.Client.Pages
 {

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Poker.Client.Modals;
-using Poker.Client.Pages;
 using Poker.Client.Services;
 using Poker.Shared;
+using System.Threading.Tasks;
+using Poker.Client.Modals;
 
 namespace Poker.Client.Shared
 {

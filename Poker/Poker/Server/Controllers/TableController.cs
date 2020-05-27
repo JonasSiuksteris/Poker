@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Poker.Server.Repositories;
 using Poker.Shared;
 using Poker.Shared.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Poker.Server.Controllers
 {
@@ -49,7 +48,7 @@ namespace Poker.Server.Controllers
                 });
             }
         }
-        
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<CreateTableResult>> Create([FromBody] CreateTableModel model)

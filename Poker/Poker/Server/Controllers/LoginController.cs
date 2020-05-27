@@ -1,18 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Poker.Shared;
+using Poker.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Poker.Server.Hubs;
-using Poker.Shared;
-using Poker.Shared.Models;
 
 namespace Poker.Server.Controllers
 {
@@ -40,7 +37,7 @@ namespace Poker.Server.Controllers
             var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
-            var claims = new List<Claim> {new Claim(ClaimTypes.Name, login.Email)};
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, login.Email) };
 
 
             foreach (var role in roles)
@@ -60,7 +57,7 @@ namespace Poker.Server.Controllers
                 signingCredentials: creds
             );
 
-            return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token)});
+            return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
     }
 }

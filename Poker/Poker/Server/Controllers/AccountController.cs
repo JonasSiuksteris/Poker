@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Poker.Shared;
 using Poker.Shared.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Poker.Server.Controllers
 {
@@ -25,7 +23,7 @@ namespace Poker.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]RegisterModel model)
         {
-            var newUser = new ApplicationUser{ UserName = model.Email, Email = model.Email };
+            var newUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
 

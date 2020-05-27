@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Blazored.Modal;
+﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Poker.Client.Modals;
 using Poker.Client.Services;
 using Poker.Shared;
-using Poker.Shared.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using Poker.Client.Modals;
 
 namespace Poker.Client.Shared
 {
@@ -36,7 +33,7 @@ namespace Poker.Client.Shared
         protected async Task Edit()
         {
             var parameters = new ModalParameters();
-            if(GameInformation.PlayersNotes.FirstOrDefault(e => e.NotedPlayerName == GamePlayer.Username) != null)
+            if (GameInformation.PlayersNotes.FirstOrDefault(e => e.NotedPlayerName == GamePlayer.Username) != null)
             {
                 parameters.Add(nameof(EditNotes.CurrentNote),
                     GameInformation.PlayersNotes.First(e => e.NotedPlayerName == GamePlayer.Username).Description);

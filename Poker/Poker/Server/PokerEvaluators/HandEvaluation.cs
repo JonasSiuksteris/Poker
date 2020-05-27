@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Poker.Shared;
 using System.Collections.Generic;
 using System.Linq;
-using Poker.Shared;
 
 namespace Poker.Server.PokerEvaluators
 {
@@ -72,7 +71,7 @@ namespace Poker.Server.PokerEvaluators
         {
             return cards.GroupBy(c => c.CardNumber)
                 .All(c => c.Count() == 3 || c.Count() == 2);
-            
+
         }
 
         private static bool FourOfAKind(List<Card> cards)

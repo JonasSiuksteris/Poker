@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Poker.Server.Models;
 using Poker.Server.PokerEvaluators;
 using Poker.Server.Repositories;
 using Poker.Shared;
 using Poker.Shared.Models;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Poker.Server.Hubs
 {
@@ -30,7 +30,7 @@ namespace Poker.Server.Hubs
 
         public async Task SendMessage(int tableId, string message)
         {
-            var newMessage = new GetMessageResult{Sender = Context.User.Identity.Name, Message = message};
+            var newMessage = new GetMessageResult { Sender = Context.User.Identity.Name, Message = message };
             await Clients.Groups(tableId.ToString()).SendAsync("ReceiveMessage", newMessage);
         }
 
@@ -137,7 +137,7 @@ namespace Poker.Server.Hubs
         {
             await DisconnectPlayer(Context.User.Identity.Name);
         }
-        
+
         public async Task MarkReady(int tableId, int depositAmount)
         {
             var user = Context.User.Identity.Name;
@@ -192,7 +192,7 @@ namespace Poker.Server.Hubs
             //Adding players to table
             foreach (var user in Users.Where(user => user.IsReady && user.TableId == tableId))
             {
-                newGame.Players.Add(new Player{Name = user.Name, RoundBet = 0});
+                newGame.Players.Add(new Player { Name = user.Name, RoundBet = 0 });
                 user.InGame = true;
             }
 
@@ -234,11 +234,11 @@ namespace Poker.Server.Hubs
 
             foreach (var player in newGame.Players)
             {
-                if(Users.Where(e => e.TableId == tableId && e.InGame).Select(e => e.Name).ToList().Contains(player.Name))
+                if (Users.Where(e => e.TableId == tableId && e.InGame).Select(e => e.Name).ToList().Contains(player.Name))
                 {
                     player.HandCards.AddRange(newGame.Deck.DrawCards(2));
                     var connectionId = Users.First(e => e.Name == player.Name).ConnectionId;
-                    if (Users.First(e => e.Name == player.Name).InGame) 
+                    if (Users.First(e => e.Name == player.Name).InGame)
                         await Clients.Client(connectionId).SendAsync("ReceiveStartingHand", player.HandCards);
                 }
             }
@@ -269,7 +269,7 @@ namespace Poker.Server.Hubs
                 {
                     pot.Players.Remove(Context.User.Identity.Name);
                 }
-                
+
                 //CheckIfOnlyOneLeft
                 if (Games.First(e => e.TableId == tableId).Players
                         .Count(e => e.ActionState == PlayerActionState.Playing) == 1)
@@ -406,7 +406,7 @@ namespace Poker.Server.Hubs
                     }
                 }
             } while ((currentGame.GetPlayerByIndex(currentGame.Index).ActionState != PlayerActionState.Playing || Users.First(e => e.Name == currentGame.GetPlayerByIndex(currentGame.Index).Name).Balance == 0
-                     || currentGame.Players.Count(e => e.ActionState == PlayerActionState.Playing) < 2 ) && Games.First(e => e.TableId == tableId).CommunityCardsActions !=
+                     || currentGame.Players.Count(e => e.ActionState == PlayerActionState.Playing) < 2) && Games.First(e => e.TableId == tableId).CommunityCardsActions !=
                      CommunityCardsActions.AfterRiver);
 
             if (Games.First(e => e.TableId == tableId).CommunityCardsActions ==
@@ -525,9 +525,9 @@ namespace Poker.Server.Hubs
             {
                 var highestHand = HandStrength.Nothing;
                 string winner = null;
-                foreach (var potPlayer in pot.Players.Where(potPlayer => highestHand > (HandStrength) evaluatedPlayers[potPlayer]))
+                foreach (var potPlayer in pot.Players.Where(potPlayer => highestHand > (HandStrength)evaluatedPlayers[potPlayer]))
                 {
-                    highestHand = (HandStrength) evaluatedPlayers[potPlayer];
+                    highestHand = (HandStrength)evaluatedPlayers[potPlayer];
                     winner = potPlayer;
                 }
                 pot.Winner = winner;
@@ -550,7 +550,7 @@ namespace Poker.Server.Hubs
                     GameMoney = user.Balance
                 });
 
-                if (Games.FirstOrDefault(e => e.TableId == tableId) != null && 
+                if (Games.FirstOrDefault(e => e.TableId == tableId) != null &&
                     Games.First(e => e.TableId == tableId).Players.Select(e => e.Name).Contains(user.Name))
                 {
                     playerState.Players.Last().ActionState = Games.First(e => e.TableId == tableId).Players
@@ -564,7 +564,7 @@ namespace Poker.Server.Hubs
 
             playerState.Pots = Games.FirstOrDefault(e => e.TableId == tableId)?.Winnings;
 
-            if(Games.FirstOrDefault(e => e.TableId == tableId) != null)
+            if (Games.FirstOrDefault(e => e.TableId == tableId) != null)
                 playerState.SmallBlind = Games.First(e => e.TableId == tableId).SmallBlind;
 
             if (Games.FirstOrDefault(e => e.TableId == tableId)?.RaiseAmount > 0)

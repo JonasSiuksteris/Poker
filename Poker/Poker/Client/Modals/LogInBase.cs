@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Blazored.Modal;
+﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared.Models;
+using System.Threading.Tasks;
 
 namespace Poker.Client.Modals
 {

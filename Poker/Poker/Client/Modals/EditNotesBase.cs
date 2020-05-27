@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Blazored.Modal;
-using Blazored.Modal.Services;
+﻿using Blazored.Modal;
 using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Poker.Client.Modals
 {
@@ -31,7 +29,7 @@ namespace Poker.Client.Modals
             ShowErrors = false;
             Console.WriteLine(EditNotesModel.CurrentNote);
             var result = await PlayerNoteService.Create(new CreateNoteModel
-                {Description = EditNotesModel.CurrentNote, NotedPlayerName = NotedPlayerName});
+            { Description = EditNotesModel.CurrentNote, NotedPlayerName = NotedPlayerName });
             if (result.Successful)
             {
                 BlazoredModal.Close();

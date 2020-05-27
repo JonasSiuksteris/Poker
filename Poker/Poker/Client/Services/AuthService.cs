@@ -1,8 +1,7 @@
-﻿using Poker.Shared.Models;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System;
+using Poker.Shared.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;

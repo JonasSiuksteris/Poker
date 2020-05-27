@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Poker.Shared;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Poker.Shared;
 
 namespace Poker.Server.Models
 {

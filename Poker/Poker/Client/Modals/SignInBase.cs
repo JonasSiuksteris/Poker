@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Blazored.Modal;
+﻿using Blazored.Modal;
 using Microsoft.AspNetCore.Components;
 using Poker.Client.Services;
 using Poker.Shared.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Poker.Client.Modals
 {
@@ -12,7 +12,7 @@ namespace Poker.Client.Modals
         [Inject]
         public IAuthService AccountService { get; set; }
 
-        [CascadingParameter] 
+        [CascadingParameter]
         public BlazoredModalInstance BlazoredModal { get; set; }
 
         public RegisterModel User { get; set; } = new RegisterModel();
