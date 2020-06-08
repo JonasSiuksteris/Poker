@@ -137,7 +137,7 @@ namespace Poker.Client.Pages
             var formModal = ModalService.Show<JoinTable>("Join table");
             var result = await formModal.Result;
             if (result.Cancelled) return;
-            await _hubConnection.SendAsync("MarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"), result.Data);
+            await _hubConnection.SendAsync("MarkReady", result.Data);
             StateService.CallRequestRefresh();
             await Task.Delay(500);
             StateService.CallRequestRefresh();
@@ -145,7 +145,7 @@ namespace Poker.Client.Pages
 
         protected async Task UnmarkReady()
         {
-            await _hubConnection.SendAsync("UnmarkReady", await LocalStorageService.GetItemAsync<int>("currentTable"));
+            await _hubConnection.SendAsync("UnmarkReady");
             StateService.CallRequestRefresh();
             await Task.Delay(500);
             StateService.CallRequestRefresh();
@@ -153,12 +153,12 @@ namespace Poker.Client.Pages
 
         protected async Task Check()
         {
-            await _hubConnection.SendAsync("ActionCheck", await LocalStorageService.GetItemAsync<int>("currentTable"));
+            await _hubConnection.SendAsync("ActionCheck");
         }
 
         protected async Task Fold()
         {
-            await _hubConnection.SendAsync("ActionFold", await LocalStorageService.GetItemAsync<int>("currentTable"));
+            await _hubConnection.SendAsync("ActionFold");
         }
 
         protected async Task Raise()
@@ -167,26 +167,25 @@ namespace Poker.Client.Pages
                 GameInformation.Players.First(e => e.Username == AuthState.User.Identity.Name).GameMoney >
                 GameInformation.PlayerRaise + GameInformation.RaiseAmount)
             {
-                await _hubConnection.SendAsync("ActionRaise", await LocalStorageService.GetItemAsync<int>("currentTable"), GameInformation.PlayerRaise);
+                await _hubConnection.SendAsync("ActionRaise", GameInformation.PlayerRaise);
             }
             GameInformation.PlayerRaise = 0;
         }
 
         protected async Task Call()
         {
-            await _hubConnection.SendAsync("ActionCall", await LocalStorageService.GetItemAsync<int>("currentTable"));
+            await _hubConnection.SendAsync("ActionCall");
         }
         protected async Task AllIn()
         {
-            await _hubConnection.SendAsync("ActionAllIn", await LocalStorageService.GetItemAsync<int>("currentTable"));
+            await _hubConnection.SendAsync("ActionAllIn");
         }
 
         protected async Task SendMessage()
         {
             if (MessageInput.Length > 0)
             {
-                await _hubConnection.SendAsync("SendMessage",
-                    await LocalStorageService.GetItemAsync<int>("currentTable"), MessageInput);
+                await _hubConnection.SendAsync("SendMessage", MessageInput);
                 MessageInput = string.Empty;
             }
 

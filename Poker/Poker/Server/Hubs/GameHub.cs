@@ -28,10 +28,14 @@ namespace Poker.Server.Hubs
             _tableRepository = tableRepository;
         }
 
-        public async Task SendMessage(int tableId, string message)
+        public async Task SendMessage(string message)
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+
             var newMessage = new GetMessageResult { Sender = Context.User.Identity.Name, Message = message };
-            await Clients.Groups(tableId.ToString()).SendAsync("ReceiveMessage", newMessage);
+
+
+            await Clients.Groups(GetTableByUser(Context.User.Identity.Name).ToString()).SendAsync("ReceiveMessage", newMessage);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -132,14 +136,11 @@ namespace Poker.Server.Hubs
 
         }
 
-
-        public async Task RemoveFromUsers(int tableId)
+        public async Task MarkReady(int depositAmount)
         {
-            await DisconnectPlayer(Context.User.Identity.Name);
-        }
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+            var tableId = GetTableByUser(Context.User.Identity.Name);
 
-        public async Task MarkReady(int tableId, int depositAmount)
-        {
             var user = Context.User.Identity.Name;
             await Deposit(depositAmount, user);
 
@@ -165,13 +166,15 @@ namespace Poker.Server.Hubs
 
         }
 
-        public async Task UnmarkReady(int tableId)
+        public async Task UnmarkReady()
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+
             var user = Context.User.Identity.Name;
             await Withdraw(user);
             Users.First(e => e.Name == user).IsReady = false;
 
-            PlayerStateRefresh(tableId);
+            PlayerStateRefresh(GetTableByUser(Context.User.Identity.Name));
         }
 
         private async Task Withdraw(string userName)
@@ -253,8 +256,11 @@ namespace Poker.Server.Hubs
                 .SendAsync("ReceiveTurnPlayer", newGame.GetPlayerNameByIndex(newGame.Index));
         }
 
-        public async Task ActionFold(int tableId)
+        public async Task ActionFold()
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+            var tableId = GetTableByUser(Context.User.Identity.Name);
+
             var currentGame = Games.First(e => e.TableId == tableId);
 
             if (currentGame.Players.Any() &&
@@ -302,8 +308,11 @@ namespace Poker.Server.Hubs
             }
         }
 
-        public async Task ActionCheck(int tableId)
+        public async Task ActionCheck()
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+            var tableId = GetTableByUser(Context.User.Identity.Name);
+
             var currentGame = Games.First(e => e.TableId == tableId);
 
             if (currentGame.Players.Any() &&
@@ -314,8 +323,11 @@ namespace Poker.Server.Hubs
             }
         }
 
-        public async Task ActionRaise(int tableId, int raiseAmount)
+        public async Task ActionRaise(int raiseAmount)
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+            var tableId = GetTableByUser(Context.User.Identity.Name);
+
             var currentGame = Games.First(e => e.TableId == tableId);
             var currentPlayer = currentGame.Players.First(e => e.Name == Context.User.Identity.Name);
 
@@ -336,8 +348,11 @@ namespace Poker.Server.Hubs
             }
         }
 
-        public async Task ActionCall(int tableId)
+        public async Task ActionCall()
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+            var tableId = GetTableByUser(Context.User.Identity.Name);
+
             var currentGame = Games.First(e => e.TableId == tableId);
             var currentPlayer = currentGame.Players.First(e => e.Name == Context.User.Identity.Name);
 
@@ -363,8 +378,11 @@ namespace Poker.Server.Hubs
             }
         }
 
-        public async Task ActionAllIn(int tableId)
+        public async Task ActionAllIn()
         {
+            if (!IsUserInGameHub(Context.User.Identity.Name)) return;
+            var tableId = GetTableByUser(Context.User.Identity.Name);
+
             var currentGame = Games.First(e => e.TableId == tableId);
             var currentPlayer = currentGame.Players.First(e => e.Name == Context.User.Identity.Name);
 
@@ -383,7 +401,6 @@ namespace Poker.Server.Hubs
                 await MoveIndex(tableId, currentGame);
             }
         }
-
 
         private async Task MoveIndex(int tableId, Game currentGame)
         {
@@ -584,6 +601,16 @@ namespace Poker.Server.Hubs
                     Clients.Client(user.ConnectionId).SendAsync("ReceiveStateRefresh", playerState);
                 }
             }
+        }
+
+        private int GetTableByUser(string name)
+        {
+            return Users.First(e => e.Name == name).TableId;
+        }
+
+        private bool IsUserInGameHub(string name)
+        {
+            return Users.Select(e => e.Name).Contains(name);
         }
     }
 }
